@@ -23,7 +23,27 @@ NEGATIVE = 0
 
 
 class PartialIdentification:
-    """The use of a PartialIdentification object is to determine bias metrics
+    """
+    Parameters
+    ----------
+    primary_dataset: (DataFrame)
+        The primary dataset containing features, ground truth, and prediction
+    auxiliary_dataset: (DataFrame):
+        The secondary dataset containing proxy variables and protected class data
+    primary_ground_truth_col:
+        Column indicating ground truth in the primary dataset
+    primary_features_col: list
+        Feature names, which should all exist in the primary dataset
+    protected_class_col:
+        Column name indicating protected class status in the secondary dataset
+    prediction_col:
+        Column name indicating model's prediction in the primary dataset
+    proxies_col: list
+        Column names indicating proxy variables shared between primary and secondary dataset
+
+    Notes
+    -----
+    The use of a PartialIdentification object is to determine bias metrics
     in a model along protected class lines, where the protected class data is not available.
 
     The object is based around a primary dataset and an auxiliary dataset.
@@ -32,16 +52,11 @@ class PartialIdentification:
 
     The secondary set contains neither the target nor an estimate for that target, but it contains
     protected class data.
-
-    args:
-        primary_dataset (DataFrame): The primary dataset containing features, ground truth, and prediction
-        auxiliary_dataset (DataFrame): The secondary dataset containing proxy variables and protected class data
-        primary_ground_truth_col (str, int): Column indicating ground truth in the primary dataset
-        primary_features_col (list(str, int)): Feature names, which should all exist in the primary dataset
-        protected_class_col (str,int): Column name indicating protected class status in the secondary dataset
-        prediction_col (str,int): Column name indicating model's prediction in the primary dataset
-        proxies_col list(str, int): Column names indicating proxy variables shared between primary and secondary dataset
-    """
+    ----------
+    .. [1] https://github.com/cfpb/proxy-methodology
+    .. [2] Fairness Under Unawareness: Assessing Disparity When Protected Class Is Unobserved
+    .. [3] Assessing Algorithmic Fairness with Unobserved Protected Class Using Data Combination
+"""
 
     def __init__(
             self,
@@ -94,16 +109,33 @@ class PartialIdentification:
 
     def build_estimators_from_proxies(
             self, n_k=5, estimator=RandomForestClassifier):
-        """Implements Steps 1-8 of Algorithm 1 of https://arxiv.org/pdf/1906.00285.pdf.
+        """
+        Parameters
+        ----------
+        self: PartialIdentification
+            Base object containing primary and auxiliary datasets
+        n_k: int
+            The number of splits used for cross-validation.
+        estimator:
+            Base estimator class. Must implement .fit and .predict_proba
+        Notes
+        -----
+        Implements Steps 1-8 of Algorithm 1 of https://arxiv.org/pdf/1906.00285.pdf.
         To create partial estimation sets, new estimators need to be made to estimate the target,
         the models' prediction of the target, and the protected class, for each row.
         These estimators are fitted on the proxy variables as described in steps 6 and 7 of Algorithm 1.
         For each estimation target (target, prediction, and protected class), predicted values are added directly
         to the class.
 
+        ----------
+        .. [3] Assessing Algorithmic Fairness with Unobserved Protected Class Using Data Combination
+    """
+
+        """
+
         Args:
             PartialIdentification objects
-            n_k: The number of splits used for cross-validation.
+            
             Estimator will be trained on each individual split and ensembled for each unseen split
             estimator: The base estimator used for each split as in steps 6 and 7 of Algorithm 1
 
