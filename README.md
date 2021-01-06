@@ -17,4 +17,4 @@ This auditing package is designed to generate disparity assessments in a binary 
 For auditing purposes, this package contains plotting functions to easily visualize partial identification sets:
 
 
-![image info](https://i.ibb.co/N29Hd9D/download-1.png)
+![image info](https://i.ibb.co/DLzB7Ws/download.png)
