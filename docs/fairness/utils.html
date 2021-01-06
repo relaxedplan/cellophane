@@ -1,0 +1,563 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.9.2" />
+<title>fairness.utils API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>fairness.utils</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">from math import log
+import matplotlib.pyplot as plt
+from matplotlib.lines import Line2D  # Imported for legends
+from matplotlib import collections as mc
+import numpy as np
+import pandas as pd
+import seaborn as sns
+
+plt.style.use(&#39;fivethirtyeight&#39;)
+
+
+def compute_lower_bound(
+        primary_index, protected_class_prediction, outcome_prob, protected_class_status, outcome
+):
+    &#34;&#34;&#34;
+    Implements eq35 of https://arxiv.org/abs/1906.00285.
+
+    Estimates the lower bound of the expected value of an outcome for a given protected class.
+    This lower bound is calculated by assuming that all classification errors push the expected value lower
+    and ignoring any classification errors which could push the expected value higher.
+
+    Args:
+        primary_index (pd.Series): Boolean int indicating if a row is in the primary dataset or auxiliary dataset
+        protected_class_prediction (pd.Series): Boolean indicating if a row is predicted to fall within the predicted class based on proxies
+        outcome_prob (pd.Series): Boolean int indicating the proxy model&#39;s estimate of the original model&#39;s prediction
+        protected_class_status (pd.Series): Boolean int indicating if a row is part of the protected class. This will be null for rows in the primary set.
+        outcome (pd.Series): Boolean indicating the original model&#39;s prediction
+
+    Returns:
+        float: Estimates the lower bound of the expected value of an outcome for a given protected class.
+    &#34;&#34;&#34;
+    ind = outcome_prob + protected_class_prediction &gt;= 1
+    lbd = ind * (outcome_prob + protected_class_prediction - 1)
+    xi = ind * (protected_class_status - protected_class_prediction)
+    gamma = ind * (outcome - outcome_prob)
+    return truncate((lbd.mean() + xi[~primary_index].mean() + gamma[primary_index].mean()) * (
+                1 / protected_class_prediction.mean()))
+
+
+def compute_upper_bound(primary_index, race_prob, outcome_prob, race, outcome):
+    &#34;&#34;&#34;
+    Implements eq36 of https://arxiv.org/abs/1906.00285.
+
+    Estimates the upper bound of the expected value of an outcome for a given protected class.
+    This upper bound is calculated by assuming that all classification errors push the expected value higher
+    and ignoring any classification errors which could push the expected value lower.
+
+    Args:
+        primary_index (pd.Series): Boolean int indicating if a row is in the primary dataset or auxiliary dataset
+        protected_class_prediction (pd.Series): Boolean indicating if a row is predicted to fall within the predicted class based on proxies
+        outcome_prob (pd.Series): Boolean int indicating the proxy model&#39;s estimate of the original model&#39;s prediction
+        protected_class_status (pd.Series): Boolean int indicating if a row is part of the protected class. This will be null for rows in the primary set.
+        outcome (pd.Series): Boolean indicating the original model&#39;s prediction
+
+    Returns:
+        float: Estimates the upper bound of the expected value of an outcome for a given protected class.
+    &#34;&#34;&#34;
+
+    ind = outcome_prob - race_prob &lt;= 0
+    lbd = (ind * (outcome_prob - race_prob)) + race_prob  #
+    xi = (1 - ind) * (race - race_prob)
+    gamma = ind * (outcome - outcome_prob)
+    return truncate((lbd.mean() + xi[~primary_index].mean() + gamma[primary_index].mean()) * (1 / race_prob.mean()))
+
+
+def compute_expected_outcome(
+        primary_index, protected_class_prediction, outcome_prob, protected_class_status, outcome
+):
+    &#34;&#34;&#34;
+    Returns the expected value of the outcome for the protected class.
+    This expected value assumes that the proxy models capture both the underlying model and the unseen protected class information perfectly,
+    providing a spurious point estimate.
+
+    Args:
+        primary_index (pd.Series): Boolean int indicating if a row is in the primary dataset or auxiliary dataset
+        protected_class_prediction (pd.Series): Boolean indicating if a row is predicted to fall within the predicted class based on proxies
+        outcome_prob (pd.Series): Boolean int indicating the proxy model&#39;s estimate of the original model&#39;s prediction
+        protected_class_status (pd.Series): Boolean int indicating if a row is part of the protected class. This will be null for rows in the primary set.
+        outcome (pd.Series): Boolean indicating the original model&#39;s prediction
+
+    Returns:
+        float: Estimates the lower bound of the expected value of an outcome for a given protected class.
+    &#34;&#34;&#34;
+    return ((protected_class_prediction[primary_index] + outcome[primary_index]) == 2).mean() / \
+           protected_class_prediction[primary_index].mean()
+
+
+def make_proxy(col, **kwargs):
+
+    &#34;&#34;&#34;
+    Helper function for graph legends
+    Args:
+        col (str): desired colour
+
+    Returns:
+        Line2D object
+    &#34;&#34;&#34;
+    return Line2D([0, 1], [0, 1], linestyle=&#39;--&#39;, color=col, label=&#39;possible values&#39;, **kwargs)
+
+
+def plot_intervals(title, protected_class_names, intervals, lower_limit=0):
+    &#34;&#34;&#34;
+    Interface to plot partial identification sets
+    Args:
+        title (str): The title of the returned plot
+        protected_class_names (list): Protected class names to be plotted
+        intervals (tuple):
+            A tuple corresponding to each protected class name.
+            Should be ordered as follows: (lower_bound, expected_value, upper_bound)
+
+    Returns:
+        plt.figure: Plot of partial identification sets
+    &#34;&#34;&#34;
+    num_intervals = len(intervals)
+    blues = plt.cm.get_cmap(&#39;Blues&#39;, num_intervals)
+    colors = np.array([blues((idx + 30) / (num_intervals + 25)) for idx in range(len(intervals))])
+
+    # Prepare the input data in correct format for LineCollection
+    lines = [[(i[0], j), (i[2], j)] for i, j in zip(intervals, range(len(intervals)))]
+
+    lc = mc.LineCollection(lines, colors=colors, linestyle=&#39;--&#39;, linewidths=2)
+    fig, ax = plt.subplots()
+    ax.add_collection(lc)
+    ax.margins(0.1)
+    plt.yticks([], [])
+    proxies = [make_proxy(c, lc) for c in colors]
+
+    # Adding annotations
+    for i, (lower, expected, upper) in enumerate(intervals):
+        plt.text(lower, i + 0.1, protected_class_names[i], color=colors[i])
+        plt.plot(lower, i, &#39;go&#39;)
+        if expected:
+            if i == 0:
+                plt.plot(expected, i, &#39;x&#39;, markersize=10, color=&#39;black&#39;, label=&#39;expected value&#39;)
+            else:
+                plt.plot(expected, i, &#39;x&#39;, markersize=10, color=&#39;black&#39;)
+        plt.plot(upper, i, &#39;go&#39;)
+    plt.title(title, pad=20)
+    plt.xlim(lower_limit-0.05, 1.05)
+    plt.legend()
+    handles, labels = ax.get_legend_handles_labels()
+    handles.append(proxies[0])
+    plt.legend(handles=handles)
+    fig = plt.gcf()
+    return fig
+
+
+def xlogx(x):
+    &#34;&#34;&#34;
+    helper function for entropy calculations
+    Args:
+        float: x
+    Returns:
+        float: x
+    &#34;&#34;&#34;
+    return x * log(x) if x != 0 else 0
+
+def truncate(x):
+    &#34;&#34;&#34;
+    Truncates x to between 0 and 1
+    Args:
+        float: x
+    Returns:
+        float: x
+    &#34;&#34;&#34;
+    return max(min(x, 1.0), 0.0)</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="fairness.utils.compute_expected_outcome"><code class="name flex">
+<span>def <span class="ident">compute_expected_outcome</span></span>(<span>primary_index, protected_class_prediction, outcome_prob, protected_class_status, outcome)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the expected value of the outcome for the protected class.
+This expected value assumes that the proxy models capture both the underlying model and the unseen protected class information perfectly,
+providing a spurious point estimate.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>primary_index</code></strong> :&ensp;<code>pd.Series</code></dt>
+<dd>Boolean int indicating if a row is in the primary dataset or auxiliary dataset</dd>
+<dt><strong><code>protected_class_prediction</code></strong> :&ensp;<code>pd.Series</code></dt>
+<dd>Boolean indicating if a row is predicted to fall within the predicted class based on proxies</dd>
+<dt><strong><code>outcome_prob</code></strong> :&ensp;<code>pd.Series</code></dt>
+<dd>Boolean int indicating the proxy model's estimate of the original model's prediction</dd>
+<dt><strong><code>protected_class_status</code></strong> :&ensp;<code>pd.Series</code></dt>
+<dd>Boolean int indicating if a row is part of the protected class. This will be null for rows in the primary set.</dd>
+<dt><strong><code>outcome</code></strong> :&ensp;<code>pd.Series</code></dt>
+<dd>Boolean indicating the original model's prediction</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>float</code></dt>
+<dd>Estimates the lower bound of the expected value of an outcome for a given protected class.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def compute_expected_outcome(
+        primary_index, protected_class_prediction, outcome_prob, protected_class_status, outcome
+):
+    &#34;&#34;&#34;
+    Returns the expected value of the outcome for the protected class.
+    This expected value assumes that the proxy models capture both the underlying model and the unseen protected class information perfectly,
+    providing a spurious point estimate.
+
+    Args:
+        primary_index (pd.Series): Boolean int indicating if a row is in the primary dataset or auxiliary dataset
+        protected_class_prediction (pd.Series): Boolean indicating if a row is predicted to fall within the predicted class based on proxies
+        outcome_prob (pd.Series): Boolean int indicating the proxy model&#39;s estimate of the original model&#39;s prediction
+        protected_class_status (pd.Series): Boolean int indicating if a row is part of the protected class. This will be null for rows in the primary set.
+        outcome (pd.Series): Boolean indicating the original model&#39;s prediction
+
+    Returns:
+        float: Estimates the lower bound of the expected value of an outcome for a given protected class.
+    &#34;&#34;&#34;
+    return ((protected_class_prediction[primary_index] + outcome[primary_index]) == 2).mean() / \
+           protected_class_prediction[primary_index].mean()</code></pre>
+</details>
+</dd>
+<dt id="fairness.utils.compute_lower_bound"><code class="name flex">
+<span>def <span class="ident">compute_lower_bound</span></span>(<span>primary_index, protected_class_prediction, outcome_prob, protected_class_status, outcome)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Implements eq35 of <a href="https://arxiv.org/abs/1906.00285.">https://arxiv.org/abs/1906.00285.</a></p>
+<p>Estimates the lower bound of the expected value of an outcome for a given protected class.
+This lower bound is calculated by assuming that all classification errors push the expected value lower
+and ignoring any classification errors which could push the expected value higher.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>primary_index</code></strong> :&ensp;<code>pd.Series</code></dt>
+<dd>Boolean int indicating if a row is in the primary dataset or auxiliary dataset</dd>
+<dt><strong><code>protected_class_prediction</code></strong> :&ensp;<code>pd.Series</code></dt>
+<dd>Boolean indicating if a row is predicted to fall within the predicted class based on proxies</dd>
+<dt><strong><code>outcome_prob</code></strong> :&ensp;<code>pd.Series</code></dt>
+<dd>Boolean int indicating the proxy model's estimate of the original model's prediction</dd>
+<dt><strong><code>protected_class_status</code></strong> :&ensp;<code>pd.Series</code></dt>
+<dd>Boolean int indicating if a row is part of the protected class. This will be null for rows in the primary set.</dd>
+<dt><strong><code>outcome</code></strong> :&ensp;<code>pd.Series</code></dt>
+<dd>Boolean indicating the original model's prediction</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>float</code></dt>
+<dd>Estimates the lower bound of the expected value of an outcome for a given protected class.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def compute_lower_bound(
+        primary_index, protected_class_prediction, outcome_prob, protected_class_status, outcome
+):
+    &#34;&#34;&#34;
+    Implements eq35 of https://arxiv.org/abs/1906.00285.
+
+    Estimates the lower bound of the expected value of an outcome for a given protected class.
+    This lower bound is calculated by assuming that all classification errors push the expected value lower
+    and ignoring any classification errors which could push the expected value higher.
+
+    Args:
+        primary_index (pd.Series): Boolean int indicating if a row is in the primary dataset or auxiliary dataset
+        protected_class_prediction (pd.Series): Boolean indicating if a row is predicted to fall within the predicted class based on proxies
+        outcome_prob (pd.Series): Boolean int indicating the proxy model&#39;s estimate of the original model&#39;s prediction
+        protected_class_status (pd.Series): Boolean int indicating if a row is part of the protected class. This will be null for rows in the primary set.
+        outcome (pd.Series): Boolean indicating the original model&#39;s prediction
+
+    Returns:
+        float: Estimates the lower bound of the expected value of an outcome for a given protected class.
+    &#34;&#34;&#34;
+    ind = outcome_prob + protected_class_prediction &gt;= 1
+    lbd = ind * (outcome_prob + protected_class_prediction - 1)
+    xi = ind * (protected_class_status - protected_class_prediction)
+    gamma = ind * (outcome - outcome_prob)
+    return truncate((lbd.mean() + xi[~primary_index].mean() + gamma[primary_index].mean()) * (
+                1 / protected_class_prediction.mean()))</code></pre>
+</details>
+</dd>
+<dt id="fairness.utils.compute_upper_bound"><code class="name flex">
+<span>def <span class="ident">compute_upper_bound</span></span>(<span>primary_index, race_prob, outcome_prob, race, outcome)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Implements eq36 of <a href="https://arxiv.org/abs/1906.00285.">https://arxiv.org/abs/1906.00285.</a></p>
+<p>Estimates the upper bound of the expected value of an outcome for a given protected class.
+This upper bound is calculated by assuming that all classification errors push the expected value higher
+and ignoring any classification errors which could push the expected value lower.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>primary_index</code></strong> :&ensp;<code>pd.Series</code></dt>
+<dd>Boolean int indicating if a row is in the primary dataset or auxiliary dataset</dd>
+<dt><strong><code>protected_class_prediction</code></strong> :&ensp;<code>pd.Series</code></dt>
+<dd>Boolean indicating if a row is predicted to fall within the predicted class based on proxies</dd>
+<dt><strong><code>outcome_prob</code></strong> :&ensp;<code>pd.Series</code></dt>
+<dd>Boolean int indicating the proxy model's estimate of the original model's prediction</dd>
+<dt><strong><code>protected_class_status</code></strong> :&ensp;<code>pd.Series</code></dt>
+<dd>Boolean int indicating if a row is part of the protected class. This will be null for rows in the primary set.</dd>
+<dt><strong><code>outcome</code></strong> :&ensp;<code>pd.Series</code></dt>
+<dd>Boolean indicating the original model's prediction</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>float</code></dt>
+<dd>Estimates the upper bound of the expected value of an outcome for a given protected class.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def compute_upper_bound(primary_index, race_prob, outcome_prob, race, outcome):
+    &#34;&#34;&#34;
+    Implements eq36 of https://arxiv.org/abs/1906.00285.
+
+    Estimates the upper bound of the expected value of an outcome for a given protected class.
+    This upper bound is calculated by assuming that all classification errors push the expected value higher
+    and ignoring any classification errors which could push the expected value lower.
+
+    Args:
+        primary_index (pd.Series): Boolean int indicating if a row is in the primary dataset or auxiliary dataset
+        protected_class_prediction (pd.Series): Boolean indicating if a row is predicted to fall within the predicted class based on proxies
+        outcome_prob (pd.Series): Boolean int indicating the proxy model&#39;s estimate of the original model&#39;s prediction
+        protected_class_status (pd.Series): Boolean int indicating if a row is part of the protected class. This will be null for rows in the primary set.
+        outcome (pd.Series): Boolean indicating the original model&#39;s prediction
+
+    Returns:
+        float: Estimates the upper bound of the expected value of an outcome for a given protected class.
+    &#34;&#34;&#34;
+
+    ind = outcome_prob - race_prob &lt;= 0
+    lbd = (ind * (outcome_prob - race_prob)) + race_prob  #
+    xi = (1 - ind) * (race - race_prob)
+    gamma = ind * (outcome - outcome_prob)
+    return truncate((lbd.mean() + xi[~primary_index].mean() + gamma[primary_index].mean()) * (1 / race_prob.mean()))</code></pre>
+</details>
+</dd>
+<dt id="fairness.utils.make_proxy"><code class="name flex">
+<span>def <span class="ident">make_proxy</span></span>(<span>col, **kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Helper function for graph legends</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>col</code></strong> :&ensp;<code>str</code></dt>
+<dd>desired colour</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Line2D object</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def make_proxy(col, **kwargs):
+
+    &#34;&#34;&#34;
+    Helper function for graph legends
+    Args:
+        col (str): desired colour
+
+    Returns:
+        Line2D object
+    &#34;&#34;&#34;
+    return Line2D([0, 1], [0, 1], linestyle=&#39;--&#39;, color=col, label=&#39;possible values&#39;, **kwargs)</code></pre>
+</details>
+</dd>
+<dt id="fairness.utils.plot_intervals"><code class="name flex">
+<span>def <span class="ident">plot_intervals</span></span>(<span>title, protected_class_names, intervals, lower_limit=0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Interface to plot partial identification sets</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>title</code></strong> :&ensp;<code>str</code></dt>
+<dd>The title of the returned plot</dd>
+<dt><strong><code>protected_class_names</code></strong> :&ensp;<code>list</code></dt>
+<dd>Protected class names to be plotted</dd>
+</dl>
+<p>intervals (tuple):
+A tuple corresponding to each protected class name.
+Should be ordered as follows: (lower_bound, expected_value, upper_bound)</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>plt.figure</code></dt>
+<dd>Plot of partial identification sets</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def plot_intervals(title, protected_class_names, intervals, lower_limit=0):
+    &#34;&#34;&#34;
+    Interface to plot partial identification sets
+    Args:
+        title (str): The title of the returned plot
+        protected_class_names (list): Protected class names to be plotted
+        intervals (tuple):
+            A tuple corresponding to each protected class name.
+            Should be ordered as follows: (lower_bound, expected_value, upper_bound)
+
+    Returns:
+        plt.figure: Plot of partial identification sets
+    &#34;&#34;&#34;
+    num_intervals = len(intervals)
+    blues = plt.cm.get_cmap(&#39;Blues&#39;, num_intervals)
+    colors = np.array([blues((idx + 30) / (num_intervals + 25)) for idx in range(len(intervals))])
+
+    # Prepare the input data in correct format for LineCollection
+    lines = [[(i[0], j), (i[2], j)] for i, j in zip(intervals, range(len(intervals)))]
+
+    lc = mc.LineCollection(lines, colors=colors, linestyle=&#39;--&#39;, linewidths=2)
+    fig, ax = plt.subplots()
+    ax.add_collection(lc)
+    ax.margins(0.1)
+    plt.yticks([], [])
+    proxies = [make_proxy(c, lc) for c in colors]
+
+    # Adding annotations
+    for i, (lower, expected, upper) in enumerate(intervals):
+        plt.text(lower, i + 0.1, protected_class_names[i], color=colors[i])
+        plt.plot(lower, i, &#39;go&#39;)
+        if expected:
+            if i == 0:
+                plt.plot(expected, i, &#39;x&#39;, markersize=10, color=&#39;black&#39;, label=&#39;expected value&#39;)
+            else:
+                plt.plot(expected, i, &#39;x&#39;, markersize=10, color=&#39;black&#39;)
+        plt.plot(upper, i, &#39;go&#39;)
+    plt.title(title, pad=20)
+    plt.xlim(lower_limit-0.05, 1.05)
+    plt.legend()
+    handles, labels = ax.get_legend_handles_labels()
+    handles.append(proxies[0])
+    plt.legend(handles=handles)
+    fig = plt.gcf()
+    return fig</code></pre>
+</details>
+</dd>
+<dt id="fairness.utils.truncate"><code class="name flex">
+<span>def <span class="ident">truncate</span></span>(<span>x)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Truncates x to between 0 and 1</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>float</code></strong></dt>
+<dd>x</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>float</code></dt>
+<dd>x</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def truncate(x):
+    &#34;&#34;&#34;
+    Truncates x to between 0 and 1
+    Args:
+        float: x
+    Returns:
+        float: x
+    &#34;&#34;&#34;
+    return max(min(x, 1.0), 0.0)</code></pre>
+</details>
+</dd>
+<dt id="fairness.utils.xlogx"><code class="name flex">
+<span>def <span class="ident">xlogx</span></span>(<span>x)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>helper function for entropy calculations</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>float</code></strong></dt>
+<dd>x</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>float</code></dt>
+<dd>x</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def xlogx(x):
+    &#34;&#34;&#34;
+    helper function for entropy calculations
+    Args:
+        float: x
+    Returns:
+        float: x
+    &#34;&#34;&#34;
+    return x * log(x) if x != 0 else 0</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="fairness" href="index.html">fairness</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="fairness.utils.compute_expected_outcome" href="#fairness.utils.compute_expected_outcome">compute_expected_outcome</a></code></li>
+<li><code><a title="fairness.utils.compute_lower_bound" href="#fairness.utils.compute_lower_bound">compute_lower_bound</a></code></li>
+<li><code><a title="fairness.utils.compute_upper_bound" href="#fairness.utils.compute_upper_bound">compute_upper_bound</a></code></li>
+<li><code><a title="fairness.utils.make_proxy" href="#fairness.utils.make_proxy">make_proxy</a></code></li>
+<li><code><a title="fairness.utils.plot_intervals" href="#fairness.utils.plot_intervals">plot_intervals</a></code></li>
+<li><code><a title="fairness.utils.truncate" href="#fairness.utils.truncate">truncate</a></code></li>
+<li><code><a title="fairness.utils.xlogx" href="#fairness.utils.xlogx">xlogx</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.2</a>.</p>
+</footer>
+</body>
+</html>
