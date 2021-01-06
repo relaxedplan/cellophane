@@ -6,62 +6,29 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 
-
-def xlogx(x):
-    """
-
-    :param x:
-    :type x:
-    :return:
-    :rtype:
-    """
-    """Returns xlogx for entropy calculation purposes"""
-    return x * log(x) if x != 0 else 0
-
-
-def truncate(x):
-    """
-
-    :param x:
-    :type x:
-    :return:
-    :rtype:
-    """
-    """Truncates X to between 0 and 1"""
-    return max(min(x, 1), 0)
+plt.style.use('fivethirtyeight')
 
 
 def compute_lower_bound(
         primary_index, protected_class_prediction, outcome_prob, protected_class_status, outcome
-):  # eq 35 of "Fairness using Data Combination"
+):
     """
+    Implements eq35 of https://arxiv.org/abs/1906.00285.
 
-    :param primary_index:
-    :type primary_index:
-    :param protected_class_prediction:
-    :type protected_class_prediction:
-    :param outcome_prob:
-    :type outcome_prob:
-    :param protected_class_status:
-    :type protected_class_status:
-    :param outcome:
-    :type outcome:
-    :return:
-    :rtype:
-    """
-    """Estimates the lower bound of the expected value of an outcome for a given protected class.
-    Implements eq35 of https://arxiv.org/abs/1906.00285
+    Estimates the lower bound of the expected value of an outcome for a given protected class.
+    This lower bound is calculated by assuming that all classification errors push the expected value lower
+    and ignoring any classification errors which could push the expected value higher.
 
     Args:
-        primary_index (Series:bool): Boolean indicating if a row is in the primary dataset or auxiliary dataset
-        protected_class_prediction (Series:bool): Boolean indicating if a row is estimated to belong to the protected class or not
-        outcome_prob (Series:bool): Boolean indicating the model's expected prediction
-        protected_class (Series:bool): Boolean indicating if a row is part of the protected class. This will be null for rows in the primary set.
-        outcome (Series:bool): Boolean indicating if a row is part of the protected class. This will be null for rows in the primary set.
+        primary_index (pd.Series): Boolean int indicating if a row is in the primary dataset or auxiliary dataset
+        protected_class_prediction (pd.Series): Boolean indicating if a row is predicted to fall within the predicted class based on proxies
+        outcome_prob (pd.Series): Boolean int indicating the proxy model's estimate of the original model's prediction
+        protected_class_status (pd.Series): Boolean int indicating if a row is part of the protected class. This will be null for rows in the primary set.
+        outcome (pd.Series): Boolean indicating the original model's prediction
 
     Returns:
-         float: Lower bound of the expected value of an outcome for a given protected class"""
-
+        float: Estimates the lower bound of the expected value of an outcome for a given protected class.
+    """
     ind = outcome_prob + protected_class_prediction >= 1
     lbd = ind * (outcome_prob + protected_class_prediction - 1)
     xi = ind * (protected_class_status - protected_class_prediction)
@@ -72,32 +39,22 @@ def compute_lower_bound(
 
 def compute_upper_bound(primary_index, race_prob, outcome_prob, race, outcome):
     """
+    Implements eq36 of https://arxiv.org/abs/1906.00285.
 
-    :param primary_index:
-    :type primary_index:
-    :param race_prob:
-    :type race_prob:
-    :param outcome_prob:
-    :type outcome_prob:
-    :param race:
-    :type race:
-    :param outcome:
-    :type outcome:
-    :return:
-    :rtype:
-    """
-    """Estimates the upper bound of the expected value of an outcome for a given protected class.
-    Implements eq36 of https://arxiv.org/abs/1906.00285
+    Estimates the upper bound of the expected value of an outcome for a given protected class.
+    This upper bound is calculated by assuming that all classification errors push the expected value higher
+    and ignoring any classification errors which could push the expected value lower.
 
     Args:
-        primary_index (Series:bool): Boolean indicating if a row is in the primary dataset or auxiliary dataset
-        race_prob (Series:bool): Boolean indicating if a row is estimated to belong to the protected class or not
-        outcome_prob (Series:bool): Boolean indicating the model's expected prediction
-        protected_class (Series:bool): Boolean indicating if a row is part of the protected class. This will be null for rows in the primary set.
-        outcome (Series:bool): Boolean indicating if a row is part of the protected class. This will be null for rows in the primary set.
+        primary_index (pd.Series): Boolean int indicating if a row is in the primary dataset or auxiliary dataset
+        protected_class_prediction (pd.Series): Boolean indicating if a row is predicted to fall within the predicted class based on proxies
+        outcome_prob (pd.Series): Boolean int indicating the proxy model's estimate of the original model's prediction
+        protected_class_status (pd.Series): Boolean int indicating if a row is part of the protected class. This will be null for rows in the primary set.
+        outcome (pd.Series): Boolean indicating the original model's prediction
 
     Returns:
-         float: Upper bound of the expected value of an outcome for a given protected class"""
+        float: Estimates the upper bound of the expected value of an outcome for a given protected class.
+    """
 
     ind = outcome_prob - race_prob <= 0
     lbd = (ind * (outcome_prob - race_prob)) + race_prob  #
@@ -110,53 +67,56 @@ def compute_expected_outcome(
         primary_index, protected_class_prediction, outcome_prob, protected_class_status, outcome
 ):
     """
+    Returns the expected value of the outcome for the protected class.
+    This expected value assumes that the proxy models capture both the underlying model and the unseen protected class information perfectly,
+    providing a spurious point estimate.
 
-    :param primary_index:
-    :type primary_index:
-    :param protected_class_prediction:
-    :type protected_class_prediction:
-    :param outcome_prob:
-    :type outcome_prob:
-    :param protected_class_status:
-    :type protected_class_status:
-    :param outcome:
-    :type outcome:
-    :return:
-    :rtype:
-    """
-    """
-    :rtype: object
+    Args:
+        primary_index (pd.Series): Boolean int indicating if a row is in the primary dataset or auxiliary dataset
+        protected_class_prediction (pd.Series): Boolean indicating if a row is predicted to fall within the predicted class based on proxies
+        outcome_prob (pd.Series): Boolean int indicating the proxy model's estimate of the original model's prediction
+        protected_class_status (pd.Series): Boolean int indicating if a row is part of the protected class. This will be null for rows in the primary set.
+        outcome (pd.Series): Boolean indicating the original model's prediction
+
+    Returns:
+        float: Estimates the lower bound of the expected value of an outcome for a given protected class.
     """
     return ((protected_class_prediction[primary_index] + outcome[primary_index]) == 2).mean() / \
            protected_class_prediction[primary_index].mean()
 
 
-def make_proxy(col, scalar_mappable, **kwargs):
-    """
+def make_proxy(col, **kwargs):
 
-    :rtype: Line2D
+    """
+    Helper function for graph legends
+    Args:
+        col (str): desired colour
+
+    Returns:
+        Line2D object
     """
     return Line2D([0, 1], [0, 1], linestyle='--', color=col, label='possible values', **kwargs)
 
 
-def plot_intervals_0_1(title, protected_class_names, intervals):
+def plot_intervals(title, protected_class_names, intervals, lower_limit=0):
     """
+    Interface to plot partial identification sets
+    Args:
+        title (str): The title of the returned plot
+        protected_class_names (list): Protected class names to be plotted
+        intervals (tuple):
+            A tuple corresponding to each protected class name.
+            Should be ordered as follows: (lower_bound, expected_value, upper_bound)
 
-    :param title:
-    :type title:
-    :param protected_class_names:
-    :type protected_class_names:
-    :param intervals:
-    :type intervals:
-    :return:
-    :rtype:
+    Returns:
+        plt.figure: Plot of partial identification sets
     """
     num_intervals = len(intervals)
     blues = plt.cm.get_cmap('Blues', num_intervals)
     colors = np.array([blues((idx + 30) / (num_intervals + 25)) for idx in range(len(intervals))])
 
     # Prepare the input data in correct format for LineCollection
-    lines = [[(i[0], j), (i[1], j)] for i, j in zip(intervals, range(len(intervals)))]
+    lines = [[(i[0], j), (i[2], j)] for i, j in zip(intervals, range(len(intervals)))]
 
     lc = mc.LineCollection(lines, colors=colors, linestyle='--', linewidths=2)
     fig, ax = plt.subplots()
@@ -176,9 +136,31 @@ def plot_intervals_0_1(title, protected_class_names, intervals):
                 plt.plot(expected, i, 'x', markersize=10, color='black')
         plt.plot(upper, i, 'go')
     plt.title(title, pad=20)
-    plt.xlim(-0.05, 1.05)
+    plt.xlim(lower_limit-0.05, 1.05)
     plt.legend()
     handles, labels = ax.get_legend_handles_labels()
     handles.append(proxies[0])
     plt.legend(handles=handles)
-    return plt.gcf()
+    fig = plt.gcf()
+    return fig
+
+
+def xlogx(x):
+    """
+    helper function for entropy calculations
+    Args:
+        float: x
+    Returns:
+        float: x
+    """
+    return x * log(x) if x != 0 else 0
+
+def truncate(x):
+    """
+    Truncates x to between 0 and 1
+    Args:
+        float: x
+    Returns:
+        float: x
+    """
+    return max(min(x, 1.0), 0.0)

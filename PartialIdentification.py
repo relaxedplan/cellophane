@@ -2,10 +2,8 @@ import itertools
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 import numpy as np
-
 import metrics
 from utils import compute_lower_bound, compute_upper_bound, truncate, compute_expected_outcome
-
 from constants import *
 
 
@@ -20,22 +18,29 @@ class PartialIdentification:
             prediction_col,
             proxies_col,
     ):
-        """
+        """Bias audits along protected class lines are usually challenged by the fact that granular protected class
+        information is not available within the data.
 
-        :param primary_dataset:
-        :type primary_dataset:
-        :param auxiliary_dataset:
-        :type auxiliary_dataset:
-        :param primary_ground_truth_col:
-        :type primary_ground_truth_col:
-        :param primary_features_col:
-        :type primary_features_col:
-        :param protected_class_col:
-        :type protected_class_col:
-        :param prediction_col:
-        :type prediction_col:
-        :param proxies_col:
-        :type proxies_col:
+        One quantitative method to address the absence of protected class data is to combine the primary dataset (
+        which contains features, ground truth, and model predictions) with
+        another auxiliary dataset which contains protected class information, features which overlap with the primary set
+        (called proxies) but not ground truth or model predictions
+
+        Naively combining the these two sets will lead to a fundamentally spurious point estimate for any bias metric.
+
+        The algorithms in this package provide partial identification sets for common bias metrics in a binary
+        classification context. These partial identification sets contain *all possible* values for a bias metric.
+        Typically the stronger your proxies, the smaller the partial identification sets will be, reflecting
+        increased certainty.
+
+        The object is based around a primary dataset and an auxiliary dataset.
+        The primary set contains both a target and the estimates for that target based on a
+        machine learning model.
+
+        The auxiliary set contains neither the target nor an estimate for that target, but it contains
+        protected class data.
+
+
         """
         assert primary_ground_truth_col in primary_dataset.columns
         assert all(f in primary_dataset.columns for f in primary_features_col)
@@ -62,8 +67,8 @@ class PartialIdentification:
 
 
         self.quadrant_dict = self.generate_binary_classification_quadrants()
-        self.wbar_hemispheres = self.generate_hemisphere_statistics_by_protected_class()
-        self.wbar_quadrants = self.generate_quadrant_statistics_by_protected_class()
+        self.hemisphere_readings = self.generate_hemisphere_statistics_by_protected_class()
+        self.quadrant_readings = self.generate_quadrant_statistics_by_protected_class()
         self.tpr_tnr, self.ppv_npv = self.generate_tpr_tnr_ppv_npv_by_protected_class()
 
     def generate_binary_classification_quadrants(self):
@@ -158,10 +163,10 @@ class PartialIdentification:
             ############TPRD_TPND_CALCULATION#############
 
             numerator = truncate(
-                self.wbar_quadrants[selected_protected_class, num_start, truth, pred, in_class])
-            denominator = (truncate(self.wbar_quadrants[selected_protected_class, denom_start, truth, pred, in_class])
+                self.quadrant_readings[selected_protected_class, num_start, truth, pred, in_class])
+            denominator = (truncate(self.quadrant_readings[selected_protected_class, denom_start, truth, pred, in_class])
                            + truncate(
-                        self.wbar_quadrants[selected_protected_class, denom_end, truth, 1 - pred, in_class]))
+                        self.quadrant_readings[selected_protected_class, denom_end, truth, 1 - pred, in_class]))
 
             if denominator == 0:
                 tpr_tnr[component_tuple] = 1
@@ -171,10 +176,10 @@ class PartialIdentification:
             ############PPVD_NPVD_CALCULATION#############
 
             numerator = truncate(
-                self.wbar_quadrants[selected_protected_class, num_start, truth, pred, in_class])
+                self.quadrant_readings[selected_protected_class, num_start, truth, pred, in_class])
             denominator = (
-                    truncate(self.wbar_quadrants[selected_protected_class, denom_start, truth, pred, in_class])
-                    + truncate(self.wbar_quadrants[selected_protected_class, denom_end, 1 - truth, pred, in_class]))
+                    truncate(self.quadrant_readings[selected_protected_class, denom_start, truth, pred, in_class])
+                    + truncate(self.quadrant_readings[selected_protected_class, denom_end, 1 - truth, pred, in_class]))
 
             if denominator == 0:
                 ppv_npv[component_tuple] = 1
@@ -358,7 +363,7 @@ class PartialIdentification:
         protected_class_membership = {}
         for idx, protected_class in enumerate(rfcs_protected_class_sec[0].classes_):
             protected_class_membership[protected_class] = np.hstack([
-                np.nan(size=len(self.primary_dataset)),
+                np.empty(shape=len(self.primary_dataset),),
                 (self.auxiliary_dataset[self.protected_class_col] == protected_class).values])
 
         return Y_from_proxies, model_prediction_from_proxies, protected_class_membership, protected_class_prob
@@ -367,52 +372,63 @@ class PartialIdentification:
     def positive_or_negative_hemisphere_reading(self, protected_class, result=POSITIVE, variable=MODEL_PREDICTION,
                           within_protected_class=True):
         """For documentation of the below see metrics.py"""
-        return metrics.positive_or_negative_hemisphere_reading(self.wbar_hemispheres, protected_class, result, variable,
-                                                               within_protected_class)
+        return dict(zip(('lower_bound','expected_value','upper_bound'),
+                        metrics.positive_or_negative_hemisphere_reading(self.hemisphere_readings, protected_class, result, variable,
+                                                               within_protected_class)))
 
     def confusion_matrix_quadrant_reading(self, protected_class, truth=POSITIVE, prediction=POSITIVE,
                         within_protected_class=True):
         """For documentation of the below see metrics.py"""
-        return metrics.confusion_matrix_quadrant_reading(self.wbar_hemispheres, protected_class, truth, prediction,
-                                                         within_protected_class)
+        return dict(zip(('lower_bound','expected_value','upper_bound'),
+            metrics.confusion_matrix_quadrant_reading(self.hemisphere_readings, protected_class, truth, prediction,
+                                                         within_protected_class)))
 
     def tpr_reading(self, protected_class):
         """For documentation of the below see metrics.py"""
-        return metrics.tpr_reading(self.tpr_tnr, protected_class)
+        return dict((zip(('lower_bound','expected_value','upper_bound'),
+                        metrics.tpr_reading(self.tpr_tnr, protected_class))))
 
     def tnr_reading(self, protected_class):
         """For documentation of the below see metrics.py"""
-        return metrics.tpr_reading(self.tpr_tnr, protected_class)
+        return dict(zip(('lower_bound','expected_value','upper_bound'),
+                        metrics.tnr_reading(self.tpr_tnr, protected_class)))
 
     def npv_reading(self, protected_class):
         """For documentation of the below see metrics.py"""
-        return metrics.npv_reading(self.ppv_npv, protected_class)
+        return dict(zip('lower_bound','expected_value','upper_bound',
+                        metrics.npv_reading(self.ppv_npv, protected_class)))
 
     def ppv_reading(self, protected_class):
         """For documentation of the below see metrics.py"""
-        return metrics.npv_reading(self.ppv_npv, protected_class)
+        return dict(zip(('lower_bound','expected_value','upper_bound'),
+                        metrics.ppv_reading(self.ppv_npv, protected_class)))
 
     def positive_or_negative_hemisphere_disparity(self, protected_class, comparison_class=OTHERS, variable=MODEL_PREDICTION, value=POSITIVE):
         """For documentation of the below see metrics.py"""
-        return metrics.positive_or_negative_hemisphere_disparity(protected_class, comparison_class, variable, value)
+        return dict(zip(('lower_bound','expected_value','upper_bound'),
+                        metrics.positive_or_negative_hemisphere_disparity(self.hemisphere_readings,protected_class, comparison_class, variable, value)))
 
     def confusion_matrix_quadrant_disparity(self, protected_class, truth=POSITIVE, prediction=POSITIVE, comparison_class=OTHERS):
         """For documentation of the below see metrics.py"""
-        return metrics.confusion_matrix_quadrant_disparity(protected_class, truth, prediction, comparison_class)
+        return dict(zip(('lower_bound','expected_value','upper_bound'),
+                        metrics.confusion_matrix_quadrant_disparity(self.quadrant_readings,protected_class, truth, prediction, comparison_class)))
 
     def tpr_disparity(self, protected_class, comparison_class=OTHERS):
         """For documentation of the below see metrics.py"""
-        return metrics.tpr_disparity(self.tpr_tnr, protected_class, comparison_class)
+        return dict(zip(('lower_bound','expected_value','upper_bound'),
+                        metrics.tpr_disparity(self.tpr_tnr, protected_class, comparison_class)))
 
     def tnr_disparity(self, protected_class, comparison_class=OTHERS):
         """For documentation of the below see metrics.py"""
-        return metrics.tnr_disparity(self.tpr_tnr, protected_class, comparison_class)
+        return dict(zip(('lower_bound','expected_value','upper_bound'),
+                        metrics.tnr_disparity(self.tpr_tnr, protected_class, comparison_class)))
 
     def ppv_disparity(self, protected_class, comparison_class=OTHERS):
         """For documentation of the below see metrics.py"""
-        return metrics.ppv_disparity(self.ppv_npv, protected_class, comparison_class)
+        return dict(zip(('lower_bound','expected_value','upper_bound'),
+                        metrics.ppv_disparity(self.ppv_npv, protected_class, comparison_class)))
 
     def npv_disparity(self, protected_class, comparison_class=OTHERS):
         """For documentation of the below see metrics.py"""
-        return metrics.npv_disparity(self.ppv_npv, protected_class, comparison_class)
-
+        return dict(zip(('lower_bound','expected_value','upper_bound'),
+                   metrics.npv_disparity(self.ppv_npv, protected_class, comparison_class)))
