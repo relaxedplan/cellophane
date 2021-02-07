@@ -8,7 +8,7 @@ These methods are controversial for various socio-technical and statistical reas
  is that the estimation of protected class membership from proxies is uncertain and subject to ad-hoc
   modelling choices. 
   
-  Bias metrics calculated using these estimation without taking into account this uncertainty will be fundamentally spurious point estimates. 
+  Bias metrics calculated using these estimations without taking into account this uncertainty will be fundamentally spurious point estimates. 
 
 This auditing package implements algorithms described [here](https://arxiv.org/pdf/1906.00285.pdf) to provide meaningful estimates of disparity, taking into account the uncertainty of estimation. Instead of generating point estimates, it generates a *range* of all possible disparities, known as a partial identification set.
    
