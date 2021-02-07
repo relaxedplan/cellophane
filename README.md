@@ -23,8 +23,8 @@ In addition to calculating partial identification sets, his package contains plo
 
 ## Demo
 
-A short demo can be viewed (here)[https://github.com/relaxedplan/partial-identification-sets/blob/master/demo.ipynb]
+A short demo can be viewed [here](https://github.com/relaxedplan/partial-identification-sets/blob/master/demo.ipynb)
 
 ## Docs
 
-Documentation can be viewed (here)[https://htmlpreview.github.io/?https://raw.githubusercontent.com/relaxedplan/partial-identification-sets/master/html/fairness/PartialIdentification.html]
+Documentation can be viewed [here](https://htmlpreview.github.io/?https://raw.githubusercontent.com/relaxedplan/partial-identification-sets/master/html/fairness/PartialIdentification.html)
