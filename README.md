@@ -1,4 +1,6 @@
-# partial-identification-sets
+# Partial Identification Sets
+## An algorithmic bias auditing tool for use when the protected class is unobserved in data
+
 A practical challenge for assessing disparity along protected class lines in algorithmic systems is that **protected class membership is often not observed in the data**.
 
 To address this challenge, various methods have been developed to impute the protected class using proxies found in the original dataset. The most famous of these is BISG, which uses surname and geolocation to predict race.
