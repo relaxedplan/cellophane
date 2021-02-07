@@ -1,5 +1,4 @@
-# Partial Identification Sets
-## An algorithmic bias auditing tool for use when the protected class is unobserved in data
+# Partial Identification Sets - algorithmic bias auditing when the protected class is unobserved 
 
 A practical challenge for assessing disparity along protected class lines in algorithmic systems is that **protected class membership is often not observed in the data**.
 
