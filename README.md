@@ -16,7 +16,13 @@ This auditing package is designed to generate disparity assessments in a binary 
   methods described at https://arxiv.org/pdf/1906.00285.pdf. These ranges are described as "partial identification
    sets".
 
-For auditing purposes, this package contains plotting functions to easily visualize partial identification sets:
-
-
+In addition to calculating partial identification sets, his package contains plotting functions to easily visualize partial identification sets:
 ![image info](https://i.ibb.co/DLzB7Ws/download.png)
+
+## Demo
+
+A short demo can be viewed (here)[https://github.com/relaxedplan/partial-identification-sets/blob/master/demo.ipynb]
+
+## Docs
+
+Documentation can be viewed (here)[https://htmlpreview.github.io/?https://raw.githubusercontent.com/relaxedplan/partial-identification-sets/master/html/fairness/PartialIdentification.html]
