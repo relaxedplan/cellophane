@@ -17,8 +17,26 @@ class PartialIdentification:
             protected_class_col,
             prediction_col,
             proxies_col,
+            estimator=RandomForestClassifier
     ):
-        """Bias audits along protected class lines are usually challenged by the fact that granular protected class
+        """
+    Args:
+        primary_dataset: (DataFrame)
+            The primary dataset containing features, ground truth, and prediction
+        auxiliary_dataset: (DataFrame):
+            The secondary dataset containing proxy variables and protected class data
+        primary_ground_truth_col: (str)
+            Column indicating ground truth in the primary dataset
+        primary_features_col: (list)
+            Feature names, which should all exist in the primary dataset
+        protected_class_col: (str)
+            Column name indicating protected class status in the secondary dataset
+        prediction_col: (str)
+            Column name indicating model's prediction in the primary dataset
+        proxies_col: (list)
+            Column names indicating proxy variables shared between primary and secondary dataset.
+    Notes:
+        Assessments of bias along protected class lines are usually challenged by the fact that granular protected class
         information is not available within the data.
 
         One quantitative method to address the absence of protected class data is to combine the primary dataset (
@@ -29,17 +47,32 @@ class PartialIdentification:
         Naively combining the these two sets will lead to a fundamentally spurious point estimate for any bias metric.
 
         The algorithms in this package provide partial identification sets for common bias metrics in a binary
-        classification context. These partial identification sets contain *all possible* values for a bias metric.
+        classification context. These partial identification sets contain *all possible* values for a bias metric,
+        subject to the weak assumptions made at https://arxiv.org/pdf/1906.00285.pdf.
+
         Typically the stronger your proxies, the smaller the partial identification sets will be, reflecting
         increased certainty.
 
-        The object is based around a primary dataset and an auxiliary dataset.
-        The primary set contains both a target and the estimates for that target based on a
-        machine learning model.
 
-        The auxiliary set contains neither the target nor an estimate for that target, but it contains
-        protected class data.
+    The PartialIdentification object contains methods for estimating bias metrics along protected class lines,
+    when the protected class information can't be directly observed in the available data.
 
+    The object is based around a primary dataset and an auxiliary dataset.
+    The primary set contains both a target and the estimates for that target based on a
+    machine learning model.
+
+    The auxiliary set contains neither the target nor an estimate for that target, but it contains
+    protected class data.
+
+
+    References:
+        [1] BISG proxy methodology (https://github.com/cfpb/proxy-methodology)
+
+        [2] Fairness Under Unawareness: Assessing Disparity When Protected Class Is Unobserved (
+        https://arxiv.org/abs/1811.11154)
+
+        [3] Assessing Algorithmic Fairness with Unobserved Protected Class Using Data Combination (
+        https://arxiv.org/abs/1906.00285)
 
         """
         assert primary_ground_truth_col in primary_dataset.columns
@@ -58,6 +91,7 @@ class PartialIdentification:
         self.protected_class_names = self.primary_dataset[protected_class_col].unique()
         self.protected_class_names.sort()
         self.combined = pd.concat([self.primary_dataset, self.auxiliary_dataset]).reset_index()
+        self.estimator = estimator
 
         self.Y = self.combined[self.primary_ground_truth_col]
         self.Yhat = self.combined[self.prediction_col]
@@ -73,9 +107,12 @@ class PartialIdentification:
 
     def generate_binary_classification_quadrants(self):
         """
-
-        :return:
-        :rtype:
+        Precalculates binary classification quadrants (true positive rates, true negative rates, false positive
+        rates, false negative rate)
+        Args:
+            self (PartialIdentification object): base object
+        Returns dictionary with true positive rates, true negative rates, false positive
+        rates, false negative rates
         """
         TT = ((self.Y_from_proxies).astype(bool) & (self.model_prediction_from_proxies).astype(bool)
               ).astype(int)
@@ -94,9 +131,14 @@ class PartialIdentification:
 
     def generate_hemisphere_statistics_by_protected_class(self):
         """
+        Precalculates confusion matrix hemispheres (positive rates, predicted positive rates, negative rates,
+        predicted negative rates)
 
-        :return:
-        :rtype:
+        Args:
+            self: PartialIdentification
+
+        Returns:
+            Dictionary with positive rate, negative rate, predicted positive rate, predicted negative rate
         """
         bounds = [LOWER_BOUND, UPPER_BOUND, EXPECTATION]
         hemisphere_component_tuples= list(
@@ -113,9 +155,14 @@ class PartialIdentification:
 
     def generate_quadrant_statistics_by_protected_class(self):
         """
+        Precalculates confusion matrix quadrants (true positives, true negatives,
+        false positives and false negatives)
 
-        :return:
-        :rtype:
+        Args:
+            self: PartialIdentification
+
+        Returns:
+            Dictionary with true positives, true negatives, false positives, and false negatives {}
         """
         bounds = [LOWER_BOUND, UPPER_BOUND, EXPECTATION]
         quadrant_component_tuples = list(
@@ -131,9 +178,10 @@ class PartialIdentification:
 
     def generate_tpr_tnr_ppv_npv_by_protected_class(self):
         """
+        Calculates all partial identification sets for TPR, TNR, PPV and NPV by protected class
 
-        :return:
-        :rtype:
+        Args:
+            self: PartialIdentification
         """
         tpr_tnr = {}
         ppv_npv = {}
@@ -190,19 +238,27 @@ class PartialIdentification:
 
     def partial_identification_quadrant_bounds_for_protected_class(self, protected_class_name, bound, truth, predicted, in_class=IN_PROTECTED_CLASS):
         """
+        Calculates a specified bound for a specified confusion matrix quadrant for a specified protected class
 
-        :param protected_class_name:
-        :type protected_class_name:
-        :param bound:
-        :type bound:
-        :param truth:
-        :type truth:
-        :param predicted:
-        :type predicted:
-        :param in_class:
-        :type in_class:
-        :return:
-        :rtype:
+        Parameters
+        ----------
+        self: PartialIdentification
+            Base object containing primary and auxiliary datasets
+        protected_class_name: str
+            Name of protected class
+        bound: str
+            One of "lower" or "upper"
+        truth: pd.Series
+            Series which represents the ground truth, or model's prediction, for the protected class
+        predicted: pd.Series
+            Series which represents the estimate of ground truth, or estimate of model's prediction, for the protected
+            class, based on proxy variables only
+        in_class: bool
+            If True, provide estimate only for the protected class. If False, provide estimate for all samples which
+            are not in the protected class.
+        Notes
+        -----
+
         """
         if bound == LOWER_BOUND:
             f = compute_lower_bound
@@ -236,19 +292,24 @@ class PartialIdentification:
     def partial_identification_hemisphere_bounds_for_protected_class(self, protected_class_name, bound, truth_or_prediction, in_class=IN_PROTECTED_CLASS,
                                  target='prediction'):
         """
+        Calculates a specified bound for a specified hemisphere for a specified protected class
 
-        :param protected_class_name:
-        :type protected_class_name:
-        :param bound:
-        :type bound:
-        :param truth_or_prediction:
-        :type truth_or_prediction:
-        :param in_class:
-        :type in_class:
-        :param target:
-        :type target:
-        :return:
-        :rtype:
+        Parameters
+        ----------
+        self: PartialIdentification
+            Base object containing primary and auxiliary datasets
+        protected_class_name: str
+            Name of protected class
+        bound: str
+            One of "lower" or "upper"
+        truth_or_prediction: pd.Series
+            Series which represents the ground truth, or model's prediction, for the protected class
+        in_class: bool
+            If True, provide estimate only for the protected class. If False, provide estimate for all samples which
+            are not in the protected class.
+        Notes
+        -----
+
         """
         if bound == LOWER_BOUND:
             f = compute_lower_bound
@@ -290,15 +351,24 @@ class PartialIdentification:
                  )
 
     def build_estimators_from_proxies(
-            self, n_k=5, estimator=RandomForestClassifier):
+            self, n_k=5):
         """
-
-        :param n_k:
-        :type n_k:
-        :param estimator:
-        :type estimator:
-        :return:
-        :rtype:
+        Parameters
+        ----------
+        self: PartialIdentification
+            Base object containing primary and auxiliary datasets
+        n_k: int
+            The number of splits used for cross-validation.
+        estimator: sklearn.base.BaseEstimator
+            Base estimator class. Must implement .fit and .predict_proba
+        Notes
+        -----
+        This function implements Steps 1-8 of Algorithm 1 of https://arxiv.org/pdf/1906.00285.pdf.
+        To create partial estimation sets, new estimators need to be made to estimate the target,
+        the models' prediction of the target, and the protected class, for each row.
+        These estimators are fitted on the proxy variables as described in steps 6 and 7 of Algorithm 1.
+        For each estimation target (target, prediction, and protected class), predicted values are added directly
+        to the class.
         """
 
         """1. Divide Primary and Auxiliary datasets into K subsets"""
@@ -310,9 +380,9 @@ class PartialIdentification:
          from proxies.
         Recall that the ground truth and model's predicion are only available for the primary set,
         and protected class status is only available for the auxiliary set"""
-        rfcs_y_pri = [estimator() for idx in range(n_k)]
-        rfcs_yhat_pri = [estimator() for idx in range(n_k)]
-        rfcs_protected_class_sec = [estimator() for idx in range(n_k)]
+        rfcs_y_pri = [self.estimator() for idx in range(n_k)]
+        rfcs_yhat_pri = [self.estimator() for idx in range(n_k)]
+        rfcs_protected_class_sec = [self.estimator() for idx in range(n_k)]
 
         """3. Train K models for each of the K subsets"""
         for idx in range(n_k):  # train k models on each of k sets
@@ -371,64 +441,64 @@ class PartialIdentification:
 
     def positive_or_negative_hemisphere_reading(self, protected_class, result=POSITIVE, variable=MODEL_PREDICTION,
                           within_protected_class=True):
-        """For documentation of the below see metrics.py"""
+        """For documentation see metrics.py"""
         return dict(zip(('lower_bound','expected_value','upper_bound'),
                         metrics.positive_or_negative_hemisphere_reading(self.hemisphere_readings, protected_class, result, variable,
                                                                within_protected_class)))
 
     def confusion_matrix_quadrant_reading(self, protected_class, truth=POSITIVE, prediction=POSITIVE,
                         within_protected_class=True):
-        """For documentation of the below see metrics.py"""
+        """For documentation see metrics.py"""
         return dict(zip(('lower_bound','expected_value','upper_bound'),
             metrics.confusion_matrix_quadrant_reading(self.hemisphere_readings, protected_class, truth, prediction,
                                                          within_protected_class)))
 
     def tpr_reading(self, protected_class):
-        """For documentation of the below see metrics.py"""
+        """For documentation see metrics.py"""
         return dict((zip(('lower_bound','expected_value','upper_bound'),
                         metrics.tpr_reading(self.tpr_tnr, protected_class))))
 
     def tnr_reading(self, protected_class):
-        """For documentation of the below see metrics.py"""
+        """For documentation see metrics.py"""
         return dict(zip(('lower_bound','expected_value','upper_bound'),
                         metrics.tnr_reading(self.tpr_tnr, protected_class)))
 
     def npv_reading(self, protected_class):
-        """For documentation of the below see metrics.py"""
+        """For documentation see metrics.py"""
         return dict(zip('lower_bound','expected_value','upper_bound',
                         metrics.npv_reading(self.ppv_npv, protected_class)))
 
     def ppv_reading(self, protected_class):
-        """For documentation of the below see metrics.py"""
+        """For documentation see metrics.py"""
         return dict(zip(('lower_bound','expected_value','upper_bound'),
                         metrics.ppv_reading(self.ppv_npv, protected_class)))
 
     def positive_or_negative_hemisphere_disparity(self, protected_class, comparison_class=OTHERS, variable=MODEL_PREDICTION, value=POSITIVE):
-        """For documentation of the below see metrics.py"""
+        """For documentation see metrics.py"""
         return dict(zip(('lower_bound','expected_value','upper_bound'),
                         metrics.positive_or_negative_hemisphere_disparity(self.hemisphere_readings,protected_class, comparison_class, variable, value)))
 
     def confusion_matrix_quadrant_disparity(self, protected_class, truth=POSITIVE, prediction=POSITIVE, comparison_class=OTHERS):
-        """For documentation of the below see metrics.py"""
+        """For documentation see metrics.py"""
         return dict(zip(('lower_bound','expected_value','upper_bound'),
                         metrics.confusion_matrix_quadrant_disparity(self.quadrant_readings,protected_class, truth, prediction, comparison_class)))
 
     def tpr_disparity(self, protected_class, comparison_class=OTHERS):
-        """For documentation of the below see metrics.py"""
+        """For documentation see metrics.py"""
         return dict(zip(('lower_bound','expected_value','upper_bound'),
                         metrics.tpr_disparity(self.tpr_tnr, protected_class, comparison_class)))
 
     def tnr_disparity(self, protected_class, comparison_class=OTHERS):
-        """For documentation of the below see metrics.py"""
+        """For documentation see metrics.py"""
         return dict(zip(('lower_bound','expected_value','upper_bound'),
                         metrics.tnr_disparity(self.tpr_tnr, protected_class, comparison_class)))
 
     def ppv_disparity(self, protected_class, comparison_class=OTHERS):
-        """For documentation of the below see metrics.py"""
+        """For documentation see metrics.py"""
         return dict(zip(('lower_bound','expected_value','upper_bound'),
                         metrics.ppv_disparity(self.ppv_npv, protected_class, comparison_class)))
 
     def npv_disparity(self, protected_class, comparison_class=OTHERS):
-        """For documentation of the below see metrics.py"""
+        """For documentation see metrics.py"""
         return dict(zip(('lower_bound','expected_value','upper_bound'),
                    metrics.npv_disparity(self.ppv_npv, protected_class, comparison_class)))

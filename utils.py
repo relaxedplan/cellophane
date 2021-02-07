@@ -111,6 +111,9 @@ def plot_intervals(title, protected_class_names, intervals, lower_limit=0):
     Returns:
         plt.figure: Plot of partial identification sets
     """
+
+    if type(intervals[0])==dict:
+        intervals = [list(i.values()) for i in intervals]
     num_intervals = len(intervals)
     blues = plt.cm.get_cmap('Blues', num_intervals)
     colors = np.array([blues((idx + 30) / (num_intervals + 25)) for idx in range(len(intervals))])
@@ -123,7 +126,7 @@ def plot_intervals(title, protected_class_names, intervals, lower_limit=0):
     ax.add_collection(lc)
     ax.margins(0.1)
     plt.yticks([], [])
-    proxies = [make_proxy(c, lc) for c in colors]
+    proxies = [make_proxy(c) for c in colors]
 
     # Adding annotations
     for i, (lower, expected, upper) in enumerate(intervals):
