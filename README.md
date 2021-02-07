@@ -14,8 +14,11 @@ This auditing package is designed to generate disparity assessments in a binary 
  account the uncertainty of the proxy model to generate a *range* of possible disparities rather than a point using
   methods described at https://arxiv.org/pdf/1906.00285.pdf. These ranges are described as "partial identification
    sets".
+   
+## Visualization
 
 In addition to calculating partial identification sets, his package contains plotting functions to easily visualize partial identification sets:
+
 ![image info](https://i.ibb.co/DLzB7Ws/download.png)
 
 ## Demo
