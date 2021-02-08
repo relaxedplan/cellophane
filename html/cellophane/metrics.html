@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.9.2" />
-<title>fairness.metrics API documentation</title>
+<title>cellophane.metrics API documentation</title>
 <meta name="description" content="" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
@@ -19,15 +19,14 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>fairness.metrics</code></h1>
+<h1 class="title">Module <code>cellophane.metrics</code></h1>
 </header>
 <section id="section-intro">
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">from constants import *
-
+<pre><code class="python">from .constants import *
 
 def positive_or_negative_hemisphere_reading(hemisphere_readings, protected_class, result=POSITIVE,
                                             variable=MODEL_PREDICTION, within_protected_class=True):
@@ -61,7 +60,8 @@ def confusion_matrix_quadrant_reading(quadrant_readings, protected_class, truth=
     &#34;&#34;&#34;
     For a confusion matrix quadrant and protected class, return the lower bound, expected value, and upper bound.
     Args:
-        quadrant_readings (dict): Dictionary containing lower/expected/upper bounds for all 4 hemispheres. Passed in automatically if called from a PartialIdentification object.
+        quadrant_readings (dict): Dictionary containing lower/expected/upper bounds for all 4 hemispheres. Passed in
+        automatically if called from a Cellophane object.
         protected_class (str): Name of protected class
         result (int): Numeric result to look up bounds for. Should be 0 or 1. If zero, looks up negative readings, if one, looks up positive readings
         variable (int): Target variable to look up bounds for. This can be &#39;prediction&#39; (MODEL_PREDICTION) or &#39;truth&#39; (GROUND_TRUTH)
@@ -81,7 +81,7 @@ def confusion_matrix_quadrant_disparity(quadrant_readings, protected_class, trut
     For a given confusion matrix quadrant, a protected class, and a comparison class, return the set of potential
     disparities in probability.
     Args:
-        quadrant_readings (dict): Dictionary containing lower/expected/upper bounds for all quadrants for all protected classes. Passed in automatically if called from a PartialIdentification object.
+        quadrant_readings (dict): Dictionary containing lower/expected/upper bounds for all quadrants for all protected classes. Passed in automatically if called from a Cellophane object.
         protected_class (str): Name of protected class
         result (int): Numeric result to look up bounds for. Should be 0 or 1. If zero, looks up negative readings, if one, looks up positive readings
         variable (int): Target variable to look up bounds for. This can be &#39;prediction&#39; (MODEL_PREDICTION) or &#39;truth&#39; (GROUND_TRUTH)
@@ -108,7 +108,7 @@ def positive_or_negative_hemisphere_disparity(hemisphere_readings, protected_cla
     &#34;&#34;&#34;
     For a given hemisphere, a protected class, and a comparison class, return the set of potential disparities in probability of being in the hemisphere between the protected class and comparison class.
     Args:
-        hemisphere_readings (dict): Dictionary containing lower/expected/upper bounds for all 4 hemispheres. Passed in automatically if called from a PartialIdentification object.
+        hemisphere_readings (dict): Dictionary containing lower/expected/upper bounds for all 4 hemispheres. Passed in automatically if called from a Cellophane object.
         protected_class (str): Name of protected class
         result (int): Numeric result to look up bounds for. Should be 0 or 1. If zero, looks up negative readings, if one, looks up positive readings
         variable (int): Target variable to look up bounds for. This can be &#39;prediction&#39; (MODEL_PREDICTION) or &#39;truth&#39; (GROUND_TRUTH)
@@ -135,7 +135,7 @@ def tpr_disparity(tprd_tpnd_components, protected_class, comparison_class=OTHERS
     &#34;&#34;&#34;
     For a given hemisphere, a protected class, and a comparison class, return the set of potential true positive rate disparities
     Args:
-        tprd_tpnd_components (dict): Dictionary containing lower/expected/upper bounds of true positives rates and true negative rates for all protected classes. Passed in automatically if called from a PartialIdentification object.
+        tprd_tpnd_components (dict): Dictionary containing lower/expected/upper bounds of true positives rates and true negative rates for all protected classes. Passed in automatically if called from a Cellophane object.
         protected_class (str): Name of protected class
         comparison_class (str):
             if OTHERS, compare the protected class to all other protected classes.
@@ -168,7 +168,7 @@ def tnr_disparity(tprd_tpnd_components, protected_class, comparison_class=OTHERS
     &#34;&#34;&#34;
     For a given hemisphere, a protected class, and a comparison class, return the set of potential true negative rate disparities
     Args:
-        tprd_tpnd_components (dict): Dictionary containing lower/expected/upper bounds of true positives rates and true negative rates for all protected classes. Passed in automatically if called from a PartialIdentification object.
+        tprd_tpnd_components (dict): Dictionary containing lower/expected/upper bounds of true positives rates and true negative rates for all protected classes. Passed in automatically if called from a Cellophane object.
         protected_class (str): Name of protected class
         comparison_class (str):
             if OTHERS, compare the protected class to all other protected classes.
@@ -201,7 +201,7 @@ def ppv_disparity(ppvd_npvd_components, protected_class, comparison_class=OTHERS
     &#34;&#34;&#34;
     For a given hemisphere, a protected class, and a comparison class, return the set of potential true negative rate disparities
     Args:
-        tprd_tpnd_components (dict): Dictionary containing lower/expected/upper bounds of true positives rates and true negative rates for all protected classes. Passed in automatically if called from a PartialIdentification object.
+        tprd_tpnd_components (dict): Dictionary containing lower/expected/upper bounds of true positives rates and true negative rates for all protected classes. Passed in automatically if called from a Cellophane object.
         protected_class (str): Name of protected class
         comparison_class (str):
             if OTHERS, compare the protected class to all other protected classes.
@@ -235,7 +235,7 @@ def npv_disparity(ppvd_npvd_components, protected_class, comparison_class=OTHERS
     &#34;&#34;&#34;
     For a given a protected class, and a comparison class, return the set of potential negative predictive value disparities
     Args:
-        tprd_tpnd_components (dict): Dictionary containing lower/expected/upper bounds of PPV and NPV for all protected classes. Passed in automatically if called from a PartialIdentification object.
+        tprd_tpnd_components (dict): Dictionary containing lower/expected/upper bounds of PPV and NPV for all protected classes. Passed in automatically if called from a Cellophane object.
         protected_class (str): Name of protected class
         comparison_class (str):
             if OTHERS, compare the protected class to all other protected classes.
@@ -267,7 +267,7 @@ def tpr_reading(tprd_tnrd_components, protected_class):
     &#34;&#34;&#34;
     For a given protected class, return the set of potential true positive rates.
     Args:
-        tprd_tpnd_components (dict): Dictionary containing lower/expected/upper bounds of true positives rates and true negative rates for all protected classes. Passed in automatically if called from a PartialIdentification object.
+        tprd_tpnd_components (dict): Dictionary containing lower/expected/upper bounds of true positives rates and true negative rates for all protected classes. Passed in automatically if called from a Cellophane object.
         protected_class (str): Name of protected class
 
     Returns:
@@ -283,7 +283,7 @@ def tnr_reading(ppvd_npvd_components, protected_class):
     &#34;&#34;&#34;
     For a given protected class, return the set of potential true negative rates.
     Args:
-        tprd_tpnd_components (dict): Dictionary containing lower/expected/upper bounds of true positives rates and true negative rates for all protected classes. Passed in automatically if called from a PartialIdentification object.
+        tprd_tpnd_components (dict): Dictionary containing lower/expected/upper bounds of true positives rates and true negative rates for all protected classes. Passed in automatically if called from a Cellophane object.
         protected_class (str): Name of protected class
 
     Returns:
@@ -299,7 +299,8 @@ def ppv_reading(ppvd_npvd_components, protected_class):
     &#34;&#34;&#34;
     For a given protected class, return the set of potential positive predictive values.
     Args:
-        tprd_tpnd_components (dict): Dictionary containing lower/expected/upper bounds of PPV and NPV for all protected classes. Passed in automatically if called from a PartialIdentification object.
+        tprd_tpnd_components (dict): Dictionary containing lower/expected/upper bounds of PPV and NPV for all
+        protected classes. Passed in automatically if called from a Cellophane object.
         protected_class (str): Name of protected class
 
     Returns:
@@ -315,7 +316,8 @@ def npv_reading(ppvd_npvd_components, protected_class):
     &#34;&#34;&#34;
     For a given protected class, return the lower bound, expected value, and upper bound, of the negative predictive value
     Args:
-        tprd_tpnd_components (dict): Dictionary containing lower/expected/upper bounds of PPV and NPV for all protected classes. Passed in automatically if called from a PartialIdentification object.
+        tprd_tpnd_components (dict): Dictionary containing lower/expected/upper bounds of PPV and NPV for all
+        protected classes. Passed in automatically if called from a Cellophane object.
         protected_class (str): Name of protected class
 
     Returns:
@@ -335,7 +337,7 @@ def npv_reading(ppvd_npvd_components, protected_class):
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt id="fairness.metrics.confusion_matrix_quadrant_disparity"><code class="name flex">
+<dt id="cellophane.metrics.confusion_matrix_quadrant_disparity"><code class="name flex">
 <span>def <span class="ident">confusion_matrix_quadrant_disparity</span></span>(<span>quadrant_readings, protected_class, truth=1, prediction=1, comparison_class='others')</span>
 </code></dt>
 <dd>
@@ -344,7 +346,7 @@ disparities in probability.</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>quadrant_readings</code></strong> :&ensp;<code>dict</code></dt>
-<dd>Dictionary containing lower/expected/upper bounds for all quadrants for all protected classes. Passed in automatically if called from a PartialIdentification object.</dd>
+<dd>Dictionary containing lower/expected/upper bounds for all quadrants for all protected classes. Passed in automatically if called from a Cellophane object.</dd>
 <dt><strong><code>protected_class</code></strong> :&ensp;<code>str</code></dt>
 <dd>Name of protected class</dd>
 <dt><strong><code>result</code></strong> :&ensp;<code>int</code></dt>
@@ -366,7 +368,7 @@ Otherwise, compare the protected class only to the comparison class.</p>
     For a given confusion matrix quadrant, a protected class, and a comparison class, return the set of potential
     disparities in probability.
     Args:
-        quadrant_readings (dict): Dictionary containing lower/expected/upper bounds for all quadrants for all protected classes. Passed in automatically if called from a PartialIdentification object.
+        quadrant_readings (dict): Dictionary containing lower/expected/upper bounds for all quadrants for all protected classes. Passed in automatically if called from a Cellophane object.
         protected_class (str): Name of protected class
         result (int): Numeric result to look up bounds for. Should be 0 or 1. If zero, looks up negative readings, if one, looks up positive readings
         variable (int): Target variable to look up bounds for. This can be &#39;prediction&#39; (MODEL_PREDICTION) or &#39;truth&#39; (GROUND_TRUTH)
@@ -389,7 +391,7 @@ Otherwise, compare the protected class only to the comparison class.</p>
             upper_pc - lower_pc)</code></pre>
 </details>
 </dd>
-<dt id="fairness.metrics.confusion_matrix_quadrant_reading"><code class="name flex">
+<dt id="cellophane.metrics.confusion_matrix_quadrant_reading"><code class="name flex">
 <span>def <span class="ident">confusion_matrix_quadrant_reading</span></span>(<span>quadrant_readings, protected_class, truth=1, prediction=1, within_protected_class=True)</span>
 </code></dt>
 <dd>
@@ -397,7 +399,8 @@ Otherwise, compare the protected class only to the comparison class.</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>quadrant_readings</code></strong> :&ensp;<code>dict</code></dt>
-<dd>Dictionary containing lower/expected/upper bounds for all 4 hemispheres. Passed in automatically if called from a PartialIdentification object.</dd>
+<dd>Dictionary containing lower/expected/upper bounds for all 4 hemispheres. Passed in</dd>
+<dt>automatically if called from a Cellophane object.</dt>
 <dt><strong><code>protected_class</code></strong> :&ensp;<code>str</code></dt>
 <dd>Name of protected class</dd>
 <dt><strong><code>result</code></strong> :&ensp;<code>int</code></dt>
@@ -417,7 +420,8 @@ Otherwise, compare the protected class only to the comparison class.</p>
     &#34;&#34;&#34;
     For a confusion matrix quadrant and protected class, return the lower bound, expected value, and upper bound.
     Args:
-        quadrant_readings (dict): Dictionary containing lower/expected/upper bounds for all 4 hemispheres. Passed in automatically if called from a PartialIdentification object.
+        quadrant_readings (dict): Dictionary containing lower/expected/upper bounds for all 4 hemispheres. Passed in
+        automatically if called from a Cellophane object.
         protected_class (str): Name of protected class
         result (int): Numeric result to look up bounds for. Should be 0 or 1. If zero, looks up negative readings, if one, looks up positive readings
         variable (int): Target variable to look up bounds for. This can be &#39;prediction&#39; (MODEL_PREDICTION) or &#39;truth&#39; (GROUND_TRUTH)
@@ -432,7 +436,7 @@ Otherwise, compare the protected class only to the comparison class.</p>
     )</code></pre>
 </details>
 </dd>
-<dt id="fairness.metrics.npv_disparity"><code class="name flex">
+<dt id="cellophane.metrics.npv_disparity"><code class="name flex">
 <span>def <span class="ident">npv_disparity</span></span>(<span>ppvd_npvd_components, protected_class, comparison_class='others')</span>
 </code></dt>
 <dd>
@@ -440,7 +444,7 @@ Otherwise, compare the protected class only to the comparison class.</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>tprd_tpnd_components</code></strong> :&ensp;<code>dict</code></dt>
-<dd>Dictionary containing lower/expected/upper bounds of PPV and NPV for all protected classes. Passed in automatically if called from a PartialIdentification object.</dd>
+<dd>Dictionary containing lower/expected/upper bounds of PPV and NPV for all protected classes. Passed in automatically if called from a Cellophane object.</dd>
 <dt><strong><code>protected_class</code></strong> :&ensp;<code>str</code></dt>
 <dd>Name of protected class</dd>
 </dl>
@@ -457,7 +461,7 @@ Otherwise, compare the protected class only to the comparison class.</p>
     &#34;&#34;&#34;
     For a given a protected class, and a comparison class, return the set of potential negative predictive value disparities
     Args:
-        tprd_tpnd_components (dict): Dictionary containing lower/expected/upper bounds of PPV and NPV for all protected classes. Passed in automatically if called from a PartialIdentification object.
+        tprd_tpnd_components (dict): Dictionary containing lower/expected/upper bounds of PPV and NPV for all protected classes. Passed in automatically if called from a Cellophane object.
         protected_class (str): Name of protected class
         comparison_class (str):
             if OTHERS, compare the protected class to all other protected classes.
@@ -486,7 +490,7 @@ Otherwise, compare the protected class only to the comparison class.</p>
         )</code></pre>
 </details>
 </dd>
-<dt id="fairness.metrics.npv_reading"><code class="name flex">
+<dt id="cellophane.metrics.npv_reading"><code class="name flex">
 <span>def <span class="ident">npv_reading</span></span>(<span>ppvd_npvd_components, protected_class)</span>
 </code></dt>
 <dd>
@@ -494,7 +498,8 @@ Otherwise, compare the protected class only to the comparison class.</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>tprd_tpnd_components</code></strong> :&ensp;<code>dict</code></dt>
-<dd>Dictionary containing lower/expected/upper bounds of PPV and NPV for all protected classes. Passed in automatically if called from a PartialIdentification object.</dd>
+<dd>Dictionary containing lower/expected/upper bounds of PPV and NPV for all</dd>
+<dt>protected classes. Passed in automatically if called from a Cellophane object.</dt>
 <dt><strong><code>protected_class</code></strong> :&ensp;<code>str</code></dt>
 <dd>Name of protected class</dd>
 </dl>
@@ -508,7 +513,8 @@ Otherwise, compare the protected class only to the comparison class.</p>
     &#34;&#34;&#34;
     For a given protected class, return the lower bound, expected value, and upper bound, of the negative predictive value
     Args:
-        tprd_tpnd_components (dict): Dictionary containing lower/expected/upper bounds of PPV and NPV for all protected classes. Passed in automatically if called from a PartialIdentification object.
+        tprd_tpnd_components (dict): Dictionary containing lower/expected/upper bounds of PPV and NPV for all
+        protected classes. Passed in automatically if called from a Cellophane object.
         protected_class (str): Name of protected class
 
     Returns:
@@ -521,7 +527,7 @@ Otherwise, compare the protected class only to the comparison class.</p>
     )</code></pre>
 </details>
 </dd>
-<dt id="fairness.metrics.positive_or_negative_hemisphere_disparity"><code class="name flex">
+<dt id="cellophane.metrics.positive_or_negative_hemisphere_disparity"><code class="name flex">
 <span>def <span class="ident">positive_or_negative_hemisphere_disparity</span></span>(<span>hemisphere_readings, protected_class, comparison_class='others', variable='prediction', value=1)</span>
 </code></dt>
 <dd>
@@ -529,7 +535,7 @@ Otherwise, compare the protected class only to the comparison class.</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>hemisphere_readings</code></strong> :&ensp;<code>dict</code></dt>
-<dd>Dictionary containing lower/expected/upper bounds for all 4 hemispheres. Passed in automatically if called from a PartialIdentification object.</dd>
+<dd>Dictionary containing lower/expected/upper bounds for all 4 hemispheres. Passed in automatically if called from a Cellophane object.</dd>
 <dt><strong><code>protected_class</code></strong> :&ensp;<code>str</code></dt>
 <dd>Name of protected class</dd>
 <dt><strong><code>result</code></strong> :&ensp;<code>int</code></dt>
@@ -550,7 +556,7 @@ Otherwise, compare the protected class only to the comparison class.</p>
     &#34;&#34;&#34;
     For a given hemisphere, a protected class, and a comparison class, return the set of potential disparities in probability of being in the hemisphere between the protected class and comparison class.
     Args:
-        hemisphere_readings (dict): Dictionary containing lower/expected/upper bounds for all 4 hemispheres. Passed in automatically if called from a PartialIdentification object.
+        hemisphere_readings (dict): Dictionary containing lower/expected/upper bounds for all 4 hemispheres. Passed in automatically if called from a Cellophane object.
         protected_class (str): Name of protected class
         result (int): Numeric result to look up bounds for. Should be 0 or 1. If zero, looks up negative readings, if one, looks up positive readings
         variable (int): Target variable to look up bounds for. This can be &#39;prediction&#39; (MODEL_PREDICTION) or &#39;truth&#39; (GROUND_TRUTH)
@@ -573,7 +579,7 @@ Otherwise, compare the protected class only to the comparison class.</p>
             upper_pc - lower_pc)</code></pre>
 </details>
 </dd>
-<dt id="fairness.metrics.positive_or_negative_hemisphere_reading"><code class="name flex">
+<dt id="cellophane.metrics.positive_or_negative_hemisphere_reading"><code class="name flex">
 <span>def <span class="ident">positive_or_negative_hemisphere_reading</span></span>(<span>hemisphere_readings, protected_class, result=1, variable='prediction', within_protected_class=True)</span>
 </code></dt>
 <dd>
@@ -635,7 +641,7 @@ If false, compute bound on data not belonging to the protected class.
     )</code></pre>
 </details>
 </dd>
-<dt id="fairness.metrics.ppv_disparity"><code class="name flex">
+<dt id="cellophane.metrics.ppv_disparity"><code class="name flex">
 <span>def <span class="ident">ppv_disparity</span></span>(<span>ppvd_npvd_components, protected_class, comparison_class='others')</span>
 </code></dt>
 <dd>
@@ -643,7 +649,7 @@ If false, compute bound on data not belonging to the protected class.
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>tprd_tpnd_components</code></strong> :&ensp;<code>dict</code></dt>
-<dd>Dictionary containing lower/expected/upper bounds of true positives rates and true negative rates for all protected classes. Passed in automatically if called from a PartialIdentification object.</dd>
+<dd>Dictionary containing lower/expected/upper bounds of true positives rates and true negative rates for all protected classes. Passed in automatically if called from a Cellophane object.</dd>
 <dt><strong><code>protected_class</code></strong> :&ensp;<code>str</code></dt>
 <dd>Name of protected class</dd>
 </dl>
@@ -660,7 +666,7 @@ Otherwise, compare the protected class only to the comparison class.</p>
     &#34;&#34;&#34;
     For a given hemisphere, a protected class, and a comparison class, return the set of potential true negative rate disparities
     Args:
-        tprd_tpnd_components (dict): Dictionary containing lower/expected/upper bounds of true positives rates and true negative rates for all protected classes. Passed in automatically if called from a PartialIdentification object.
+        tprd_tpnd_components (dict): Dictionary containing lower/expected/upper bounds of true positives rates and true negative rates for all protected classes. Passed in automatically if called from a Cellophane object.
         protected_class (str): Name of protected class
         comparison_class (str):
             if OTHERS, compare the protected class to all other protected classes.
@@ -690,7 +696,7 @@ Otherwise, compare the protected class only to the comparison class.</p>
         )</code></pre>
 </details>
 </dd>
-<dt id="fairness.metrics.ppv_reading"><code class="name flex">
+<dt id="cellophane.metrics.ppv_reading"><code class="name flex">
 <span>def <span class="ident">ppv_reading</span></span>(<span>ppvd_npvd_components, protected_class)</span>
 </code></dt>
 <dd>
@@ -698,7 +704,8 @@ Otherwise, compare the protected class only to the comparison class.</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>tprd_tpnd_components</code></strong> :&ensp;<code>dict</code></dt>
-<dd>Dictionary containing lower/expected/upper bounds of PPV and NPV for all protected classes. Passed in automatically if called from a PartialIdentification object.</dd>
+<dd>Dictionary containing lower/expected/upper bounds of PPV and NPV for all</dd>
+<dt>protected classes. Passed in automatically if called from a Cellophane object.</dt>
 <dt><strong><code>protected_class</code></strong> :&ensp;<code>str</code></dt>
 <dd>Name of protected class</dd>
 </dl>
@@ -712,7 +719,8 @@ Otherwise, compare the protected class only to the comparison class.</p>
     &#34;&#34;&#34;
     For a given protected class, return the set of potential positive predictive values.
     Args:
-        tprd_tpnd_components (dict): Dictionary containing lower/expected/upper bounds of PPV and NPV for all protected classes. Passed in automatically if called from a PartialIdentification object.
+        tprd_tpnd_components (dict): Dictionary containing lower/expected/upper bounds of PPV and NPV for all
+        protected classes. Passed in automatically if called from a Cellophane object.
         protected_class (str): Name of protected class
 
     Returns:
@@ -725,7 +733,7 @@ Otherwise, compare the protected class only to the comparison class.</p>
     )</code></pre>
 </details>
 </dd>
-<dt id="fairness.metrics.tnr_disparity"><code class="name flex">
+<dt id="cellophane.metrics.tnr_disparity"><code class="name flex">
 <span>def <span class="ident">tnr_disparity</span></span>(<span>tprd_tpnd_components, protected_class, comparison_class='others')</span>
 </code></dt>
 <dd>
@@ -733,7 +741,7 @@ Otherwise, compare the protected class only to the comparison class.</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>tprd_tpnd_components</code></strong> :&ensp;<code>dict</code></dt>
-<dd>Dictionary containing lower/expected/upper bounds of true positives rates and true negative rates for all protected classes. Passed in automatically if called from a PartialIdentification object.</dd>
+<dd>Dictionary containing lower/expected/upper bounds of true positives rates and true negative rates for all protected classes. Passed in automatically if called from a Cellophane object.</dd>
 <dt><strong><code>protected_class</code></strong> :&ensp;<code>str</code></dt>
 <dd>Name of protected class</dd>
 </dl>
@@ -750,7 +758,7 @@ Otherwise, compare the protected class only to the comparison class.</p>
     &#34;&#34;&#34;
     For a given hemisphere, a protected class, and a comparison class, return the set of potential true negative rate disparities
     Args:
-        tprd_tpnd_components (dict): Dictionary containing lower/expected/upper bounds of true positives rates and true negative rates for all protected classes. Passed in automatically if called from a PartialIdentification object.
+        tprd_tpnd_components (dict): Dictionary containing lower/expected/upper bounds of true positives rates and true negative rates for all protected classes. Passed in automatically if called from a Cellophane object.
         protected_class (str): Name of protected class
         comparison_class (str):
             if OTHERS, compare the protected class to all other protected classes.
@@ -779,7 +787,7 @@ Otherwise, compare the protected class only to the comparison class.</p>
         )</code></pre>
 </details>
 </dd>
-<dt id="fairness.metrics.tnr_reading"><code class="name flex">
+<dt id="cellophane.metrics.tnr_reading"><code class="name flex">
 <span>def <span class="ident">tnr_reading</span></span>(<span>ppvd_npvd_components, protected_class)</span>
 </code></dt>
 <dd>
@@ -787,7 +795,7 @@ Otherwise, compare the protected class only to the comparison class.</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>tprd_tpnd_components</code></strong> :&ensp;<code>dict</code></dt>
-<dd>Dictionary containing lower/expected/upper bounds of true positives rates and true negative rates for all protected classes. Passed in automatically if called from a PartialIdentification object.</dd>
+<dd>Dictionary containing lower/expected/upper bounds of true positives rates and true negative rates for all protected classes. Passed in automatically if called from a Cellophane object.</dd>
 <dt><strong><code>protected_class</code></strong> :&ensp;<code>str</code></dt>
 <dd>Name of protected class</dd>
 </dl>
@@ -801,7 +809,7 @@ Otherwise, compare the protected class only to the comparison class.</p>
     &#34;&#34;&#34;
     For a given protected class, return the set of potential true negative rates.
     Args:
-        tprd_tpnd_components (dict): Dictionary containing lower/expected/upper bounds of true positives rates and true negative rates for all protected classes. Passed in automatically if called from a PartialIdentification object.
+        tprd_tpnd_components (dict): Dictionary containing lower/expected/upper bounds of true positives rates and true negative rates for all protected classes. Passed in automatically if called from a Cellophane object.
         protected_class (str): Name of protected class
 
     Returns:
@@ -814,7 +822,7 @@ Otherwise, compare the protected class only to the comparison class.</p>
     )</code></pre>
 </details>
 </dd>
-<dt id="fairness.metrics.tpr_disparity"><code class="name flex">
+<dt id="cellophane.metrics.tpr_disparity"><code class="name flex">
 <span>def <span class="ident">tpr_disparity</span></span>(<span>tprd_tpnd_components, protected_class, comparison_class='others')</span>
 </code></dt>
 <dd>
@@ -822,7 +830,7 @@ Otherwise, compare the protected class only to the comparison class.</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>tprd_tpnd_components</code></strong> :&ensp;<code>dict</code></dt>
-<dd>Dictionary containing lower/expected/upper bounds of true positives rates and true negative rates for all protected classes. Passed in automatically if called from a PartialIdentification object.</dd>
+<dd>Dictionary containing lower/expected/upper bounds of true positives rates and true negative rates for all protected classes. Passed in automatically if called from a Cellophane object.</dd>
 <dt><strong><code>protected_class</code></strong> :&ensp;<code>str</code></dt>
 <dd>Name of protected class</dd>
 </dl>
@@ -839,7 +847,7 @@ Otherwise, compare the protected class only to the comparison class.</p>
     &#34;&#34;&#34;
     For a given hemisphere, a protected class, and a comparison class, return the set of potential true positive rate disparities
     Args:
-        tprd_tpnd_components (dict): Dictionary containing lower/expected/upper bounds of true positives rates and true negative rates for all protected classes. Passed in automatically if called from a PartialIdentification object.
+        tprd_tpnd_components (dict): Dictionary containing lower/expected/upper bounds of true positives rates and true negative rates for all protected classes. Passed in automatically if called from a Cellophane object.
         protected_class (str): Name of protected class
         comparison_class (str):
             if OTHERS, compare the protected class to all other protected classes.
@@ -868,7 +876,7 @@ Otherwise, compare the protected class only to the comparison class.</p>
         )</code></pre>
 </details>
 </dd>
-<dt id="fairness.metrics.tpr_reading"><code class="name flex">
+<dt id="cellophane.metrics.tpr_reading"><code class="name flex">
 <span>def <span class="ident">tpr_reading</span></span>(<span>tprd_tnrd_components, protected_class)</span>
 </code></dt>
 <dd>
@@ -876,7 +884,7 @@ Otherwise, compare the protected class only to the comparison class.</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>tprd_tpnd_components</code></strong> :&ensp;<code>dict</code></dt>
-<dd>Dictionary containing lower/expected/upper bounds of true positives rates and true negative rates for all protected classes. Passed in automatically if called from a PartialIdentification object.</dd>
+<dd>Dictionary containing lower/expected/upper bounds of true positives rates and true negative rates for all protected classes. Passed in automatically if called from a Cellophane object.</dd>
 <dt><strong><code>protected_class</code></strong> :&ensp;<code>str</code></dt>
 <dd>Name of protected class</dd>
 </dl>
@@ -890,7 +898,7 @@ Otherwise, compare the protected class only to the comparison class.</p>
     &#34;&#34;&#34;
     For a given protected class, return the set of potential true positive rates.
     Args:
-        tprd_tpnd_components (dict): Dictionary containing lower/expected/upper bounds of true positives rates and true negative rates for all protected classes. Passed in automatically if called from a PartialIdentification object.
+        tprd_tpnd_components (dict): Dictionary containing lower/expected/upper bounds of true positives rates and true negative rates for all protected classes. Passed in automatically if called from a Cellophane object.
         protected_class (str): Name of protected class
 
     Returns:
@@ -916,23 +924,23 @@ Otherwise, compare the protected class only to the comparison class.</p>
 <ul id="index">
 <li><h3>Super-module</h3>
 <ul>
-<li><code><a title="fairness" href="index.html">fairness</a></code></li>
+<li><code><a title="cellophane" href="index.html">cellophane</a></code></li>
 </ul>
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
-<li><code><a title="fairness.metrics.confusion_matrix_quadrant_disparity" href="#fairness.metrics.confusion_matrix_quadrant_disparity">confusion_matrix_quadrant_disparity</a></code></li>
-<li><code><a title="fairness.metrics.confusion_matrix_quadrant_reading" href="#fairness.metrics.confusion_matrix_quadrant_reading">confusion_matrix_quadrant_reading</a></code></li>
-<li><code><a title="fairness.metrics.npv_disparity" href="#fairness.metrics.npv_disparity">npv_disparity</a></code></li>
-<li><code><a title="fairness.metrics.npv_reading" href="#fairness.metrics.npv_reading">npv_reading</a></code></li>
-<li><code><a title="fairness.metrics.positive_or_negative_hemisphere_disparity" href="#fairness.metrics.positive_or_negative_hemisphere_disparity">positive_or_negative_hemisphere_disparity</a></code></li>
-<li><code><a title="fairness.metrics.positive_or_negative_hemisphere_reading" href="#fairness.metrics.positive_or_negative_hemisphere_reading">positive_or_negative_hemisphere_reading</a></code></li>
-<li><code><a title="fairness.metrics.ppv_disparity" href="#fairness.metrics.ppv_disparity">ppv_disparity</a></code></li>
-<li><code><a title="fairness.metrics.ppv_reading" href="#fairness.metrics.ppv_reading">ppv_reading</a></code></li>
-<li><code><a title="fairness.metrics.tnr_disparity" href="#fairness.metrics.tnr_disparity">tnr_disparity</a></code></li>
-<li><code><a title="fairness.metrics.tnr_reading" href="#fairness.metrics.tnr_reading">tnr_reading</a></code></li>
-<li><code><a title="fairness.metrics.tpr_disparity" href="#fairness.metrics.tpr_disparity">tpr_disparity</a></code></li>
-<li><code><a title="fairness.metrics.tpr_reading" href="#fairness.metrics.tpr_reading">tpr_reading</a></code></li>
+<li><code><a title="cellophane.metrics.confusion_matrix_quadrant_disparity" href="#cellophane.metrics.confusion_matrix_quadrant_disparity">confusion_matrix_quadrant_disparity</a></code></li>
+<li><code><a title="cellophane.metrics.confusion_matrix_quadrant_reading" href="#cellophane.metrics.confusion_matrix_quadrant_reading">confusion_matrix_quadrant_reading</a></code></li>
+<li><code><a title="cellophane.metrics.npv_disparity" href="#cellophane.metrics.npv_disparity">npv_disparity</a></code></li>
+<li><code><a title="cellophane.metrics.npv_reading" href="#cellophane.metrics.npv_reading">npv_reading</a></code></li>
+<li><code><a title="cellophane.metrics.positive_or_negative_hemisphere_disparity" href="#cellophane.metrics.positive_or_negative_hemisphere_disparity">positive_or_negative_hemisphere_disparity</a></code></li>
+<li><code><a title="cellophane.metrics.positive_or_negative_hemisphere_reading" href="#cellophane.metrics.positive_or_negative_hemisphere_reading">positive_or_negative_hemisphere_reading</a></code></li>
+<li><code><a title="cellophane.metrics.ppv_disparity" href="#cellophane.metrics.ppv_disparity">ppv_disparity</a></code></li>
+<li><code><a title="cellophane.metrics.ppv_reading" href="#cellophane.metrics.ppv_reading">ppv_reading</a></code></li>
+<li><code><a title="cellophane.metrics.tnr_disparity" href="#cellophane.metrics.tnr_disparity">tnr_disparity</a></code></li>
+<li><code><a title="cellophane.metrics.tnr_reading" href="#cellophane.metrics.tnr_reading">tnr_reading</a></code></li>
+<li><code><a title="cellophane.metrics.tpr_disparity" href="#cellophane.metrics.tpr_disparity">tpr_disparity</a></code></li>
+<li><code><a title="cellophane.metrics.tpr_reading" href="#cellophane.metrics.tpr_reading">tpr_reading</a></code></li>
 </ul>
 </li>
 </ul>

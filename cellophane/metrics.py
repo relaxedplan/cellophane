@@ -1,5 +1,4 @@
-from constants import *
-
+from .constants import *
 
 def positive_or_negative_hemisphere_reading(hemisphere_readings, protected_class, result=POSITIVE,
                                             variable=MODEL_PREDICTION, within_protected_class=True):
@@ -33,7 +32,8 @@ def confusion_matrix_quadrant_reading(quadrant_readings, protected_class, truth=
     """
     For a confusion matrix quadrant and protected class, return the lower bound, expected value, and upper bound.
     Args:
-        quadrant_readings (dict): Dictionary containing lower/expected/upper bounds for all 4 hemispheres. Passed in automatically if called from a PartialIdentification object.
+        quadrant_readings (dict): Dictionary containing lower/expected/upper bounds for all 4 hemispheres. Passed in
+        automatically if called from a Cellophane object.
         protected_class (str): Name of protected class
         result (int): Numeric result to look up bounds for. Should be 0 or 1. If zero, looks up negative readings, if one, looks up positive readings
         variable (int): Target variable to look up bounds for. This can be 'prediction' (MODEL_PREDICTION) or 'truth' (GROUND_TRUTH)
@@ -53,7 +53,7 @@ def confusion_matrix_quadrant_disparity(quadrant_readings, protected_class, trut
     For a given confusion matrix quadrant, a protected class, and a comparison class, return the set of potential
     disparities in probability.
     Args:
-        quadrant_readings (dict): Dictionary containing lower/expected/upper bounds for all quadrants for all protected classes. Passed in automatically if called from a PartialIdentification object.
+        quadrant_readings (dict): Dictionary containing lower/expected/upper bounds for all quadrants for all protected classes. Passed in automatically if called from a Cellophane object.
         protected_class (str): Name of protected class
         result (int): Numeric result to look up bounds for. Should be 0 or 1. If zero, looks up negative readings, if one, looks up positive readings
         variable (int): Target variable to look up bounds for. This can be 'prediction' (MODEL_PREDICTION) or 'truth' (GROUND_TRUTH)
@@ -80,7 +80,7 @@ def positive_or_negative_hemisphere_disparity(hemisphere_readings, protected_cla
     """
     For a given hemisphere, a protected class, and a comparison class, return the set of potential disparities in probability of being in the hemisphere between the protected class and comparison class.
     Args:
-        hemisphere_readings (dict): Dictionary containing lower/expected/upper bounds for all 4 hemispheres. Passed in automatically if called from a PartialIdentification object.
+        hemisphere_readings (dict): Dictionary containing lower/expected/upper bounds for all 4 hemispheres. Passed in automatically if called from a Cellophane object.
         protected_class (str): Name of protected class
         result (int): Numeric result to look up bounds for. Should be 0 or 1. If zero, looks up negative readings, if one, looks up positive readings
         variable (int): Target variable to look up bounds for. This can be 'prediction' (MODEL_PREDICTION) or 'truth' (GROUND_TRUTH)
@@ -107,7 +107,7 @@ def tpr_disparity(tprd_tpnd_components, protected_class, comparison_class=OTHERS
     """
     For a given hemisphere, a protected class, and a comparison class, return the set of potential true positive rate disparities
     Args:
-        tprd_tpnd_components (dict): Dictionary containing lower/expected/upper bounds of true positives rates and true negative rates for all protected classes. Passed in automatically if called from a PartialIdentification object.
+        tprd_tpnd_components (dict): Dictionary containing lower/expected/upper bounds of true positives rates and true negative rates for all protected classes. Passed in automatically if called from a Cellophane object.
         protected_class (str): Name of protected class
         comparison_class (str):
             if OTHERS, compare the protected class to all other protected classes.
@@ -140,7 +140,7 @@ def tnr_disparity(tprd_tpnd_components, protected_class, comparison_class=OTHERS
     """
     For a given hemisphere, a protected class, and a comparison class, return the set of potential true negative rate disparities
     Args:
-        tprd_tpnd_components (dict): Dictionary containing lower/expected/upper bounds of true positives rates and true negative rates for all protected classes. Passed in automatically if called from a PartialIdentification object.
+        tprd_tpnd_components (dict): Dictionary containing lower/expected/upper bounds of true positives rates and true negative rates for all protected classes. Passed in automatically if called from a Cellophane object.
         protected_class (str): Name of protected class
         comparison_class (str):
             if OTHERS, compare the protected class to all other protected classes.
@@ -173,7 +173,7 @@ def ppv_disparity(ppvd_npvd_components, protected_class, comparison_class=OTHERS
     """
     For a given hemisphere, a protected class, and a comparison class, return the set of potential true negative rate disparities
     Args:
-        tprd_tpnd_components (dict): Dictionary containing lower/expected/upper bounds of true positives rates and true negative rates for all protected classes. Passed in automatically if called from a PartialIdentification object.
+        tprd_tpnd_components (dict): Dictionary containing lower/expected/upper bounds of true positives rates and true negative rates for all protected classes. Passed in automatically if called from a Cellophane object.
         protected_class (str): Name of protected class
         comparison_class (str):
             if OTHERS, compare the protected class to all other protected classes.
@@ -207,7 +207,7 @@ def npv_disparity(ppvd_npvd_components, protected_class, comparison_class=OTHERS
     """
     For a given a protected class, and a comparison class, return the set of potential negative predictive value disparities
     Args:
-        tprd_tpnd_components (dict): Dictionary containing lower/expected/upper bounds of PPV and NPV for all protected classes. Passed in automatically if called from a PartialIdentification object.
+        tprd_tpnd_components (dict): Dictionary containing lower/expected/upper bounds of PPV and NPV for all protected classes. Passed in automatically if called from a Cellophane object.
         protected_class (str): Name of protected class
         comparison_class (str):
             if OTHERS, compare the protected class to all other protected classes.
@@ -239,7 +239,7 @@ def tpr_reading(tprd_tnrd_components, protected_class):
     """
     For a given protected class, return the set of potential true positive rates.
     Args:
-        tprd_tpnd_components (dict): Dictionary containing lower/expected/upper bounds of true positives rates and true negative rates for all protected classes. Passed in automatically if called from a PartialIdentification object.
+        tprd_tpnd_components (dict): Dictionary containing lower/expected/upper bounds of true positives rates and true negative rates for all protected classes. Passed in automatically if called from a Cellophane object.
         protected_class (str): Name of protected class
 
     Returns:
@@ -255,7 +255,7 @@ def tnr_reading(ppvd_npvd_components, protected_class):
     """
     For a given protected class, return the set of potential true negative rates.
     Args:
-        tprd_tpnd_components (dict): Dictionary containing lower/expected/upper bounds of true positives rates and true negative rates for all protected classes. Passed in automatically if called from a PartialIdentification object.
+        tprd_tpnd_components (dict): Dictionary containing lower/expected/upper bounds of true positives rates and true negative rates for all protected classes. Passed in automatically if called from a Cellophane object.
         protected_class (str): Name of protected class
 
     Returns:
@@ -271,7 +271,8 @@ def ppv_reading(ppvd_npvd_components, protected_class):
     """
     For a given protected class, return the set of potential positive predictive values.
     Args:
-        tprd_tpnd_components (dict): Dictionary containing lower/expected/upper bounds of PPV and NPV for all protected classes. Passed in automatically if called from a PartialIdentification object.
+        tprd_tpnd_components (dict): Dictionary containing lower/expected/upper bounds of PPV and NPV for all
+        protected classes. Passed in automatically if called from a Cellophane object.
         protected_class (str): Name of protected class
 
     Returns:
@@ -287,7 +288,8 @@ def npv_reading(ppvd_npvd_components, protected_class):
     """
     For a given protected class, return the lower bound, expected value, and upper bound, of the negative predictive value
     Args:
-        tprd_tpnd_components (dict): Dictionary containing lower/expected/upper bounds of PPV and NPV for all protected classes. Passed in automatically if called from a PartialIdentification object.
+        tprd_tpnd_components (dict): Dictionary containing lower/expected/upper bounds of PPV and NPV for all
+        protected classes. Passed in automatically if called from a Cellophane object.
         protected_class (str): Name of protected class
 
     Returns:

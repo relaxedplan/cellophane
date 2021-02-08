@@ -2,21 +2,23 @@ import itertools
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 import numpy as np
-import metrics
-from utils import compute_lower_bound, compute_upper_bound, truncate, compute_expected_outcome
-from constants import *
+
+from . import metrics
+from .constants import *
+from .utils import *
 
 
-class PartialIdentification:
+class Cellophane:
     def __init__(
             self,
             primary_dataset,
             auxiliary_dataset,
+            primary_feature_cols,
+            proxy_cols,
             primary_ground_truth_col,
-            primary_features_col,
             protected_class_col,
             prediction_col,
-            proxies_col,
+
             estimator=RandomForestClassifier
     ):
         """
@@ -25,16 +27,16 @@ class PartialIdentification:
             The primary dataset containing features, ground truth, and prediction
         auxiliary_dataset: (DataFrame):
             The secondary dataset containing proxy variables and protected class data
+        primary_feature_cols: (list)
+            Feature names, which should all exist in the primary dataset
+        proxy_cols: (list)
+            Column names indicating proxy variables shared between primary and secondary dataset.
         primary_ground_truth_col: (str)
             Column indicating ground truth in the primary dataset
-        primary_features_col: (list)
-            Feature names, which should all exist in the primary dataset
         protected_class_col: (str)
             Column name indicating protected class status in the secondary dataset
         prediction_col: (str)
             Column name indicating model's prediction in the primary dataset
-        proxies_col: (list)
-            Column names indicating proxy variables shared between primary and secondary dataset.
     Notes:
         Assessments of bias along protected class lines are usually challenged by the fact that granular protected class
         information is not available within the data.
@@ -54,15 +56,16 @@ class PartialIdentification:
         increased certainty.
 
 
-    The PartialIdentification object contains methods for estimating bias metrics along protected class lines,
+    The Cellophane object contains methods for estimating bias metrics along protected class lines,
     when the protected class information can't be directly observed in the available data.
 
     The object is based around a primary dataset and an auxiliary dataset.
-    The primary set contains both a target and the estimates for that target based on a
+    The primary set contains features, a target, and/or the estimates for that target based on a
     machine learning model.
 
     The auxiliary set contains neither the target nor an estimate for that target, but it contains
-    protected class data.
+    protected class data. It should contain at least some columns which overlap with the primary set (these are
+    termed "proxy" columns)
 
 
     References:
@@ -76,17 +79,17 @@ class PartialIdentification:
 
         """
         assert primary_ground_truth_col in primary_dataset.columns
-        assert all(f in primary_dataset.columns for f in primary_features_col)
-        assert all(p in primary_dataset.columns for p in proxies_col)
-        assert all(p in auxiliary_dataset.columns for p in proxies_col)
+        assert all(f in primary_dataset.columns for f in primary_feature_cols)
+        assert all(p in primary_dataset.columns for p in proxy_cols)
+        assert all(p in auxiliary_dataset.columns for p in proxy_cols)
         assert protected_class_col in auxiliary_dataset.columns
 
         self.primary_dataset = primary_dataset
         self.auxiliary_dataset = auxiliary_dataset
         self.primary_ground_truth_col = primary_ground_truth_col
-        self.primary_features_col = primary_features_col
+        self.primary_features_col = primary_feature_cols
         self.protected_class_col = protected_class_col
-        self.proxies = proxies_col
+        self.proxies = proxy_cols
         self.prediction_col = prediction_col
         self.protected_class_names = self.primary_dataset[protected_class_col].unique()
         self.protected_class_names.sort()
@@ -110,7 +113,7 @@ class PartialIdentification:
         Precalculates binary classification quadrants (true positive rates, true negative rates, false positive
         rates, false negative rate)
         Args:
-            self (PartialIdentification object): base object
+            self (Cellophane object): base object
         Returns dictionary with true positive rates, true negative rates, false positive
         rates, false negative rates
         """
@@ -135,7 +138,7 @@ class PartialIdentification:
         predicted negative rates)
 
         Args:
-            self: PartialIdentification
+            self: Cellophane
 
         Returns:
             Dictionary with positive rate, negative rate, predicted positive rate, predicted negative rate
@@ -159,7 +162,7 @@ class PartialIdentification:
         false positives and false negatives)
 
         Args:
-            self: PartialIdentification
+            self: Cellophane
 
         Returns:
             Dictionary with true positives, true negatives, false positives, and false negatives {}
@@ -181,7 +184,7 @@ class PartialIdentification:
         Calculates all partial identification sets for TPR, TNR, PPV and NPV by protected class
 
         Args:
-            self: PartialIdentification
+            self: Cellophane
         """
         tpr_tnr = {}
         ppv_npv = {}
@@ -242,7 +245,7 @@ class PartialIdentification:
 
         Parameters
         ----------
-        self: PartialIdentification
+        self: Cellophane
             Base object containing primary and auxiliary datasets
         protected_class_name: str
             Name of protected class
@@ -296,7 +299,7 @@ class PartialIdentification:
 
         Parameters
         ----------
-        self: PartialIdentification
+        self: Cellophane
             Base object containing primary and auxiliary datasets
         protected_class_name: str
             Name of protected class
@@ -355,7 +358,7 @@ class PartialIdentification:
         """
         Parameters
         ----------
-        self: PartialIdentification
+        self: Cellophane
             Base object containing primary and auxiliary datasets
         n_k: int
             The number of splits used for cross-validation.

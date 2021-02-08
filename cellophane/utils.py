@@ -4,7 +4,6 @@ from matplotlib.lines import Line2D  # Imported for legends
 from matplotlib import collections as mc
 import numpy as np
 import pandas as pd
-import seaborn as sns
 
 plt.style.use('fivethirtyeight')
 
