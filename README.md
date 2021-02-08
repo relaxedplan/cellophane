@@ -19,7 +19,7 @@ In addition to calculating partial identification sets, his package contains plo
 ## Installation
 To install cellophane, clone, unpack it, and:
 
-$ python setup.py install
+```$ python setup.py install```
 
 A pip package is coming shortly.
 
