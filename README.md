@@ -25,7 +25,7 @@ A pip package is coming shortly.
 
 ## Demo
 
-A short demo can be viewed [here](https://github.com/relaxedplan/partial-identification-sets/blob/master/demo.ipynb)
+A short demo can be viewed [here](https://github.com/relaxedplan/partial-identification-sets/blob/master/demo/demo.ipynb)
 
 ## Docs
 
