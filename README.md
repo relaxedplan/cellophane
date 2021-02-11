@@ -12,7 +12,7 @@ This auditing package implements algorithms described [here](https://arxiv.org/p
 
 ## Visualization
 
-In addition to calculating partial identification sets, his package contains plotting functions to easily visualize partial identification sets:
+In addition to calculating partial identification sets, this package contains plotting functions to easily visualize partial identification sets:
 
 ![image info](https://i.ibb.co/DLzB7Ws/download.png)
 
